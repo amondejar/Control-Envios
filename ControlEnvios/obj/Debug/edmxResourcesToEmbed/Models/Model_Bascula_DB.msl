@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="BasculaModelStoreContainer" CdmEntityContainer="BasculaEntities">
+    <EntitySetMapping Name="PROVEEDOR">
+      <EntityTypeMapping TypeName="BasculaModel.PROVEEDOR">
+        <MappingFragment StoreEntitySet="PROVEEDOR">
+          <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+          <ScalarProperty Name="CODPROVEEDOR" ColumnName="CODPROVEEDOR" />
+          <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+          <ScalarProperty Name="CIF" ColumnName="CIF" />
+          <ScalarProperty Name="DIRECCION" ColumnName="DIRECCION" />
+          <ScalarProperty Name="POBLACION" ColumnName="POBLACION" />
+          <ScalarProperty Name="PROVINCIA" ColumnName="PROVINCIA" />
+          <ScalarProperty Name="CODPOSTAL" ColumnName="CODPOSTAL" />
+          <ScalarProperty Name="OBSERVACIONES" ColumnName="OBSERVACIONES" />
+          <ScalarProperty Name="PASSWORD" ColumnName="PASSWORD" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ENVIOMERCANCIA">
+      <EntityTypeMapping TypeName="BasculaModel.ENVIOMERCANCIA">
+        <MappingFragment StoreEntitySet="ENVIOMERCANCIA">
+          <ScalarProperty Name="TIENENETO" ColumnName="TIENENETO" />
+          <ScalarProperty Name="SENDEMAIL" ColumnName="SENDEMAIL" />
+          <ScalarProperty Name="MATRICULA" ColumnName="MATRICULA" />
+          <ScalarProperty Name="OBSERVACIONES" ColumnName="OBSERVACIONES" />
+          <ScalarProperty Name="ESTADO" ColumnName="ESTADO" />
+          <ScalarProperty Name="KILOSENVIADOS" ColumnName="KILOSENVIADOS" />
+          <ScalarProperty Name="CODARTICULO" ColumnName="CODARTICULO" />
+          <ScalarProperty Name="HORAENVIO" ColumnName="HORAENVIO" />
+          <ScalarProperty Name="FECHAENVIO" ColumnName="FECHAENVIO" />
+          <ScalarProperty Name="CODPROVEEDOR" ColumnName="CODPROVEEDOR" />
+          <ScalarProperty Name="IDENVIO" ColumnName="IDENVIO" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MODULO">
+      <EntityTypeMapping TypeName="BasculaModel.MODULO">
+        <MappingFragment StoreEntitySet="MODULO">
+          <ScalarProperty Name="bgName" ColumnName="bgName" />
+          <ScalarProperty Name="icono" ColumnName="icono" />
+          <ScalarProperty Name="Controller" ColumnName="Controller" />
+          <ScalarProperty Name="Acction" ColumnName="Acction" />
+          <ScalarProperty Name="NombreModulo" ColumnName="NombreModulo" />
+          <ScalarProperty Name="IdModulo" ColumnName="IdModulo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ARTICULO">
+      <EntityTypeMapping TypeName="BasculaModel.ARTICULO">
+        <MappingFragment StoreEntitySet="ARTICULO">
+          <ScalarProperty Name="ACTIVAWEB" ColumnName="ACTIVAWEB" />
+          <ScalarProperty Name="CODARTICULO" ColumnName="CODARTICULO" />
+          <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+          <ScalarProperty Name="ID_ARTICULO" ColumnName="ID_ARTICULO" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ESTADOMERCANCIA">
+      <EntityTypeMapping TypeName="BasculaModel.ESTADOMERCANCIA">
+        <MappingFragment StoreEntitySet="ESTADOMERCANCIA">
+          <ScalarProperty Name="ESTADOMERCANCIA1" ColumnName="ESTADOMERCANCIA" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="USUARIOS">
+      <EntityTypeMapping TypeName="BasculaModel.USUARIOS">
+        <MappingFragment StoreEntitySet="USUARIOS">
+          <ScalarProperty Name="CHECKWEBADMIN" ColumnName="CHECKWEBADMIN" />
+          <ScalarProperty Name="PASSWORD" ColumnName="PASSWORD" />
+          <ScalarProperty Name="ALIAS" ColumnName="ALIAS" />
+          <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+          <ScalarProperty Name="ID_PERFIL" ColumnName="ID_PERFIL" />
+          <ScalarProperty Name="ID_USUARIO" ColumnName="ID_USUARIO" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PESADABASCULA">
+      <EntityTypeMapping TypeName="BasculaModel.PESADABASCULA">
+        <MappingFragment StoreEntitySet="PESADABASCULA">
+          <ScalarProperty Name="VGMTARA" ColumnName="VGMTARA" />
+          <ScalarProperty Name="EMAILENVIADO" ColumnName="EMAILENVIADO" />
+          <ScalarProperty Name="IDENVIOWEB" ColumnName="IDENVIOWEB" />
+          <ScalarProperty Name="BALSAPEQUENA" ColumnName="BALSAPEQUENA" />
+          <ScalarProperty Name="BALSAGRANDE" ColumnName="BALSAGRANDE" />
+          <ScalarProperty Name="ESTADOMERCANCIA" ColumnName="ESTADOMERCANCIA" />
+          <ScalarProperty Name="ESTADOCAMION" ColumnName="ESTADOCAMION" />
+          <ScalarProperty Name="INFOMODPESADA" ColumnName="INFOMODPESADA" />
+          <ScalarProperty Name="USERPESADA" ColumnName="USERPESADA" />
+          <ScalarProperty Name="OBSERVACIONES" ColumnName="OBSERVACIONES" />
+          <ScalarProperty Name="SECUNPESADA" ColumnName="SECUNPESADA" />
+          <ScalarProperty Name="PRIMEPESADA" ColumnName="PRIMEPESADA" />
+          <ScalarProperty Name="PESADANETO" ColumnName="PESADANETO" />
+          <ScalarProperty Name="PESADA2" ColumnName="PESADA2" />
+          <ScalarProperty Name="PESADA1" ColumnName="PESADA1" />
+          <ScalarProperty Name="HORASALIDA" ColumnName="HORASALIDA" />
+          <ScalarProperty Name="FECHASALIDA" ColumnName="FECHASALIDA" />
+          <ScalarProperty Name="HORAENTRADA" ColumnName="HORAENTRADA" />
+          <ScalarProperty Name="FECHAENTRADA" ColumnName="FECHAENTRADA" />
+          <ScalarProperty Name="PRECIOKG" ColumnName="PRECIOKG" />
+          <ScalarProperty Name="COD_ART" ColumnName="COD_ART" />
+          <ScalarProperty Name="COD_CLIE" ColumnName="COD_CLIE" />
+          <ScalarProperty Name="COD_PROV" ColumnName="COD_PROV" />
+          <ScalarProperty Name="REMOLQUE" ColumnName="REMOLQUE" />
+          <ScalarProperty Name="MATRICULA" ColumnName="MATRICULA" />
+          <ScalarProperty Name="ID_TICKET" ColumnName="ID_TICKET" />
+          <ScalarProperty Name="ID_PESADA" ColumnName="ID_PESADA" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="PROC_ENVIOPESADA" FunctionName="BasculaModel.Store.ENVIOPESADA">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="BasculaModel.PROC_ENVIOPESADA_Result">
+          <ScalarProperty Name="CODARTICULO" ColumnName="CODARTICULO" />
+          <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+          <ScalarProperty Name="MATRICULA" ColumnName="MATRICULA" />
+          <ScalarProperty Name="CODPROVEEDOR" ColumnName="CODPROVEEDOR" />
+          <ScalarProperty Name="FECHAENVIO" ColumnName="FECHAENVIO" />
+          <ScalarProperty Name="HORAENVIO" ColumnName="HORAENVIO" />
+          <ScalarProperty Name="IDENVIO" ColumnName="IDENVIO" />
+          <ScalarProperty Name="KILOSENVIADOS" ColumnName="KILOSENVIADOS" />
+          <ScalarProperty Name="ESTADO" ColumnName="ESTADO" />
+          <ScalarProperty Name="PESADANETO" ColumnName="PESADANETO" />
+          <ScalarProperty Name="IDENVIOWEB" ColumnName="IDENVIOWEB" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="LISTAENVIOSFECHAPROVEEDOR" FunctionName="BasculaModel.Store.LISTAENVIOSFECHAPROVEEDOR">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="BasculaModel.LISTAENVIOSFECHAPROVEEDOR_Result">
+          <ScalarProperty Name="NombreArticulo" ColumnName="NombreArticulo" />
+          <ScalarProperty Name="Matricula" ColumnName="Matricula" />
+          <ScalarProperty Name="CodProveedor" ColumnName="CodProveedor" />
+          <ScalarProperty Name="NomProveedor" ColumnName="NomProveedor" />
+          <ScalarProperty Name="FechaEnvio" ColumnName="FechaEnvio" />
+          <ScalarProperty Name="HoraEnvio" ColumnName="HoraEnvio" />
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="KilosEnviados" ColumnName="KilosEnviados" />
+          <ScalarProperty Name="PesoBascula" ColumnName="PesoBascula" />
+          <ScalarProperty Name="BasculaG" ColumnName="BasculaG" />
+          <ScalarProperty Name="BasculaP" ColumnName="BasculaP" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="ALLCUPOSPROVEEDOR" FunctionName="BasculaModel.Store.ALLCUPOSPROVEEDOR">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="BasculaModel.ALLCUPOSPROVEEDOR_Result">
+          <ScalarProperty Name="IDCUPOCAB" ColumnName="IDCUPOCAB" />
+          <ScalarProperty Name="IDCUPOPROV" ColumnName="IDCUPOPROV" />
+          <ScalarProperty Name="CODARTICULO" ColumnName="CODARTICULO" />
+          <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+          <ScalarProperty Name="CODPROVEE" ColumnName="CODPROVEE" />
+          <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+          <ScalarProperty Name="FECHAINICIOCUPO" ColumnName="FECHAINICIOCUPO" />
+          <ScalarProperty Name="FEHAFINALCUPO" ColumnName="FEHAFINALCUPO" />
+          <ScalarProperty Name="PORCENTAGEASIG" ColumnName="PORCENTAGEASIG" />
+          <ScalarProperty Name="ACTIVACUPO" ColumnName="ACTIVACUPO" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <EntitySetMapping Name="CUPOKG">
+      <EntityTypeMapping TypeName="BasculaModel.CUPOKG">
+        <MappingFragment StoreEntitySet="CUPOKG">
+          <ScalarProperty Name="CUPOKILOS" ColumnName="CUPOKILOS" />
+          <ScalarProperty Name="IDCUPOKG" ColumnName="IDCUPOKG" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CUPOPROVEEDOR">
+      <EntityTypeMapping TypeName="BasculaModel.CUPOPROVEEDOR">
+        <MappingFragment StoreEntitySet="CUPOPROVEEDOR">
+          <ScalarProperty Name="ACTIVACUPO" ColumnName="ACTIVACUPO" />
+          <ScalarProperty Name="PORCENTAGEASIG" ColumnName="PORCENTAGEASIG" />
+          <ScalarProperty Name="FEHAFINALCUPO" ColumnName="FEHAFINALCUPO" />
+          <ScalarProperty Name="FECHAINICIOCUPO" ColumnName="FECHAINICIOCUPO" />
+          <ScalarProperty Name="CODARTICULO" ColumnName="CODARTICULO" />
+          <ScalarProperty Name="CODPROVEE" ColumnName="CODPROVEE" />
+          <ScalarProperty Name="IDCUPOPROV" ColumnName="IDCUPOPROV" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="KILOS_SEMANA_PROVEEDOR" FunctionName="BasculaModel.Store.KILOS_SEMANA_PROVEEDOR" />
+    <FunctionImportMapping FunctionImportName="CANCELAENVIO" FunctionName="BasculaModel.Store.CANCELAENVIO" />
+    <FunctionImportMapping FunctionImportName="LISTAENVIOSIDPROVEEDOR" FunctionName="BasculaModel.Store.LISTAENVIOSIDPROVEEDOR">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="BasculaModel.LISTAENVIOSIDPROVEEDOR_Result">
+          <ScalarProperty Name="NombreArticulo" ColumnName="NombreArticulo" />
+          <ScalarProperty Name="Matricula" ColumnName="Matricula" />
+          <ScalarProperty Name="CodProveedor" ColumnName="CodProveedor" />
+          <ScalarProperty Name="NomProveedor" ColumnName="NomProveedor" />
+          <ScalarProperty Name="FechaEnvio" ColumnName="FechaEnvio" />
+          <ScalarProperty Name="HoraEnvio" ColumnName="HoraEnvio" />
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="KilosEnviados" ColumnName="KilosEnviados" />
+          <ScalarProperty Name="Estado" ColumnName="Estado" />
+          <ScalarProperty Name="PesoBascula" ColumnName="PesoBascula" />
+          <ScalarProperty Name="BasculaG" ColumnName="BasculaG" />
+          <ScalarProperty Name="BasculaP" ColumnName="BasculaP" />
+          <ScalarProperty Name="Observaciones" ColumnName="Observaciones" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="CANCELAENVIOEMAIL" FunctionName="BasculaModel.Store.CANCELAENVIOEMAIL">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="BasculaModel.CANCELAENVIOEMAIL_Result">
+          <ScalarProperty Name="IDENVIO" ColumnName="IDENVIO" />
+          <ScalarProperty Name="FECHAENVIO" ColumnName="FECHAENVIO" />
+          <ScalarProperty Name="HORAENVIO" ColumnName="HORAENVIO" />
+          <ScalarProperty Name="MATRICULA" ColumnName="MATRICULA" />
+          <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+          <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="TODOSLOSENVIOSPROVEE" FunctionName="BasculaModel.Store.TODOSLOSENVIOSPROVEE">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="BasculaModel.TODOSLOSENVIOSPROVEE_Result">
+          <ScalarProperty Name="NombreArticulo" ColumnName="NombreArticulo" />
+          <ScalarProperty Name="Matricula" ColumnName="Matricula" />
+          <ScalarProperty Name="CodProveedor" ColumnName="CodProveedor" />
+          <ScalarProperty Name="NomProveedor" ColumnName="NomProveedor" />
+          <ScalarProperty Name="FechaEnvio" ColumnName="FechaEnvio" />
+          <ScalarProperty Name="HoraEnvio" ColumnName="HoraEnvio" />
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="KilosEnviados" ColumnName="KilosEnviados" />
+          <ScalarProperty Name="Estado" ColumnName="Estado" />
+          <ScalarProperty Name="PesoBascula" ColumnName="PesoBascula" />
+          <ScalarProperty Name="BasculaG" ColumnName="BasculaG" />
+          <ScalarProperty Name="BasculaP" ColumnName="BasculaP" />
+          <ScalarProperty Name="Observaciones" ColumnName="Observaciones" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+  </EntityContainerMapping>
+</Mapping>

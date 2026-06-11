@@ -1,0 +1,80 @@
+﻿@model ControlEnvios.Models.ModelProveedor
+
+@{ 
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+
+<div class="row">
+
+    <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
+        <div class="panel panel-info">
+
+            <div class="panel-body log-sec">
+                @using (Html.BeginForm("Index", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "fromLogin" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="input-group input-area">
+                        <span class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></span>
+                        @Html.TextBoxFor(m => m.CodProveedor, new { @class = "form-control", @placeholder = "Cod.Provedor", @maxlength = "50" })
+                    </div>
+
+                    @Html.ValidationMessageFor(m => m.CodProveedor, "", new { @class = "text-danger" })
+                    <div class="input-group mt-15 input-area">
+                        <span class="input-group-addon"><i class="fa fa-lock" aria-hidden="true"></i></span>
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder ="Password", @maxlength = "50" })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    <div class="from-group mt-15 input-area">
+                        <div class="pull-left">
+                            <label>
+                                @Html.CheckBoxFor(m => m.Recuerdame)
+                                @Html.LabelFor(m => m.Recuerdame)
+                            </label>
+                        </div>
+                        @*<div class="pull-right hidden"><a href="#">@Login.ForgotPassword</a></div>*@
+                    </div>
+
+                    <div class="form-group mt-15">
+                        <!-- Button -->
+                        <div class="col-sm-12 controls">
+                            <input type="submit" value="Aceptar" class="btn btn-success" />
+                        </div>
+                    </div>
+                    @*<div class="input-group input-area">
+                        @Html.ActionLink("Privacidad y Condiciones de uso", "TermsAndConditions", "Account", new { @target = "_blank" })
+                    </div>
+                    <div class="row input-area">
+                        <div class="col-md-12">
+                            <select class="form-control" id="isTemsConditionAccept">
+                                <option value="true">Aceptar</option>
+                                <option value="false">Cancelar</option>
+                            </select>
+                        </div>
+                    </div>*@
+                   
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/bundles/jqueryval")
+@section Scripts {
+    <script type="text/javascript">
+        var error = @Html.Raw(Json.Encode(TempData["Error"]));
+        var success = @Html.Raw(Json.Encode(TempData["success"]));
+        var response;
+        var message;
+        if(error){
+            showTostMessage(false, error);
+            //response = false;
+            //message = error;
+        } else if(success) {
+            showTostMessage(true, success);
+            //response = true;
+            //message = success;
+        }
+
+    </script>
+}

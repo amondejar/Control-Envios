@@ -1,0 +1,66 @@
+﻿@model List<ControlEnvios.Models.ModeloEnvio>
+@{
+    Layout = "~/Views/Shared/_LayoutVerEnvios.cshtml";
+}
+
+<div>
+    <div class="row text-center">
+        <h3 class="expense-title mt-0">Envios Realizados</h3>
+    </div>
+
+    @if(Model.Count() > 0)
+    {
+
+
+        <div class="row text-center mt-30">
+            <section id="no-more-tables">
+                <table class="table" id="tableVerEnvios">
+                    <thead>
+                        <tr>
+                            <th>Cod.Proveedor</th>
+                            <th>Articulo</th>
+                            <th>Fecha Envio</th>
+                            <th>Hora Envio</th>
+                            <th>Kilos Enviados</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach  (var Env in Model)
+                        {
+                            <tr>
+                                <td align="left" data-title="Cod.Proveedor :" >@Env.CodProveedor</td>
+                                <td align="left" data-title="Articulo : ">@Env.Articulo</td>
+                                <td align="left" data-title="Fecha Envio :">@Env.FechaEnvio.ToString()</td>
+                                <td align="left" data-title="Hora Envio :"> @Env.HoraEnvio.ToString()</td>
+                                <td align="left" data-title="Kilos Enviados :">@Env.KilosEnviados</td>
+                                <td align="center" data-title="Acciones :">
+                                    <a href="javascript:void(0);" class="btnEdit" id="@Env.IdEnvio"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                    <a href="javascript:void(0);" class="btnDelete" id="@Env.IdEnvio"><i class="fa fa-times" aria-hidden="true"></i></a>
+                                    <a href="javascript:void(0);" class="btnView" id="@Env.IdEnvio"><i class="fa fa-eye" aria-hidden="true"></i></a>&nbsp;&nbsp;
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    }
+    else
+    {
+          <div class="text-center"><h3>No se ha encontrado resultados.</h3></div>
+    }
+
+
+</div>
+<div class="row text-center mg-25">
+    <div class="form-horizontal form-group">
+        <!-- Button -->
+        <div class="col-sm-12 controls log-sec">
+            <input type="button" value="Crear Envio" id="btnAdd" class="btn btn-success btn-holidayleave" />
+        </div>
+    </div>
+</div>
+
+
+

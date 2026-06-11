@@ -1,0 +1,295 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="BasculaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="PROVEEDOR">
+    <Key>
+      <PropertyRef Name="CODPROVEEDOR" />
+    </Key>
+    <Property Name="CODPROVEEDOR" Type="String" MaxLength="9" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="NOMBRE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="CIF" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="DIRECCION" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="POBLACION" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="PROVINCIA" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="CODPOSTAL" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+    <Property Name="OBSERVACIONES" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+    <Property Name="PASSWORD" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="EMAIL" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityContainer Name="BasculaEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="PROVEEDOR" EntityType="Self.PROVEEDOR" />
+    <EntitySet Name="ENVIOMERCANCIA" EntityType="BasculaModel.ENVIOMERCANCIA" />
+    <EntitySet Name="MODULO" EntityType="BasculaModel.MODULO" />
+    <EntitySet Name="ARTICULO" EntityType="BasculaModel.ARTICULO" />
+    <EntitySet Name="ESTADOMERCANCIA" EntityType="BasculaModel.ESTADOMERCANCIA" />
+    <EntitySet Name="USUARIOS" EntityType="BasculaModel.USUARIOS" />
+    <EntitySet Name="PESADABASCULA" EntityType="BasculaModel.PESADABASCULA" />
+    <FunctionImport Name="PROC_ENVIOPESADA" ReturnType="Collection(BasculaModel.PROC_ENVIOPESADA_Result)">
+      <Parameter Name="fechaHoy" Mode="In" Type="DateTime" />
+      <Parameter Name="Proveedor" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="LISTAENVIOSFECHAPROVEEDOR" ReturnType="Collection(BasculaModel.LISTAENVIOSFECHAPROVEEDOR_Result)">
+      <Parameter Name="fechaEnvio" Mode="In" Type="DateTime" />
+      <Parameter Name="fechaFin" Mode="In" Type="DateTime" />
+      <Parameter Name="codproveedor" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="ALLCUPOSPROVEEDOR" ReturnType="Collection(BasculaModel.ALLCUPOSPROVEEDOR_Result)" />
+    <EntitySet Name="CUPOKG" EntityType="BasculaModel.CUPOKG" />
+    <EntitySet Name="CUPOPROVEEDOR" EntityType="BasculaModel.CUPOPROVEEDOR" />
+    <FunctionImport Name="KILOS_SEMANA_PROVEEDOR" ReturnType="Collection(Decimal)">
+      <Parameter Name="fechaInicio" Mode="In" Type="DateTime" />
+      <Parameter Name="fechaFin" Mode="In" Type="DateTime" />
+      <Parameter Name="codproveedor" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="CANCELAENVIO">
+      <Parameter Name="id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="LISTAENVIOSIDPROVEEDOR" ReturnType="Collection(BasculaModel.LISTAENVIOSIDPROVEEDOR_Result)">
+      <Parameter Name="idEnvio" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="CANCELAENVIOEMAIL" ReturnType="Collection(BasculaModel.CANCELAENVIOEMAIL_Result)">
+      <Parameter Name="id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="RECUPERAENVIOSPROVEE" ReturnType="Collection(BasculaModel.RECUPERAENVIOSPROVEE_Result)" />
+    <FunctionImport Name="RECUPERAENVIOSPROVEE1" ReturnType="Collection(BasculaModel.RECUPERAENVIOSPROVEE1_Result)" />
+    <FunctionImport Name="TODOSLOSENVIOSPROVEE" ReturnType="Collection(BasculaModel.TODOSLOSENVIOSPROVEE_Result)" />
+  </EntityContainer>
+  <EntityType Name="ENVIOMERCANCIA">
+    <Key>
+      <PropertyRef Name="IDENVIO" />
+    </Key>
+    <Property Name="IDENVIO" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CODPROVEEDOR" Type="String" Nullable="false" MaxLength="9" FixedLength="false" Unicode="false" />
+    <Property Name="FECHAENVIO" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="HORAENVIO" Type="DateTime" Precision="3" />
+    <Property Name="CODARTICULO" Type="String" Nullable="false" MaxLength="7" FixedLength="false" Unicode="false" />
+    <Property Name="KILOSENVIADOS" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="ESTADO" Type="Int32" Nullable="false" />
+    <Property Name="OBSERVACIONES" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
+    <Property Name="MATRICULA" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="SENDEMAIL" Type="Boolean" Nullable="false" />
+    <Property Name="TIENENETO" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MODULO">
+    <Key>
+      <PropertyRef Name="IdModulo" />
+    </Key>
+    <Property Name="IdModulo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NombreModulo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Acction" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Controller" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="icono" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="bgName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="ARTICULO">
+    <Key>
+      <PropertyRef Name="ID_ARTICULO" />
+    </Key>
+    <Property Name="ID_ARTICULO" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DESCRIPCION" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="CODARTICULO" Type="String" Nullable="false" MaxLength="7" FixedLength="false" Unicode="false" />
+    <Property Name="ACTIVAWEB" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="ESTADOMERCANCIA">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="ESTADOMERCANCIA1" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="USUARIOS">
+    <Key>
+      <PropertyRef Name="ID_USUARIO" />
+    </Key>
+    <Property Name="ID_USUARIO" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ID_PERFIL" Type="Int32" Nullable="false" />
+    <Property Name="NOMBRE" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ALIAS" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="PASSWORD" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="CHECKWEBADMIN" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PESADABASCULA">
+    <Key>
+      <PropertyRef Name="ID_PESADA" />
+    </Key>
+    <Property Name="ID_PESADA" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ID_TICKET" Type="String" Nullable="false" MaxLength="12" FixedLength="false" Unicode="false" />
+    <Property Name="MATRICULA" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="REMOLQUE" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="COD_PROV" Type="String" MaxLength="9" FixedLength="false" Unicode="false" />
+    <Property Name="COD_CLIE" Type="String" MaxLength="9" FixedLength="false" Unicode="false" />
+    <Property Name="COD_ART" Type="Int32" />
+    <Property Name="PRECIOKG" Type="Decimal" Precision="18" Scale="4" />
+    <Property Name="FECHAENTRADA" Type="DateTime" Precision="3" />
+    <Property Name="HORAENTRADA" Type="DateTime" Precision="3" />
+    <Property Name="FECHASALIDA" Type="DateTime" Precision="3" />
+    <Property Name="HORASALIDA" Type="DateTime" Precision="3" />
+    <Property Name="PESADA1" Type="Decimal" Precision="18" Scale="0" />
+    <Property Name="PESADA2" Type="Decimal" Precision="18" Scale="0" />
+    <Property Name="PESADANETO" Type="Decimal" Precision="18" Scale="0" />
+    <Property Name="PRIMEPESADA" Type="Int32" />
+    <Property Name="SECUNPESADA" Type="Int32" />
+    <Property Name="OBSERVACIONES" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="USERPESADA" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="INFOMODPESADA" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+    <Property Name="ESTADOCAMION" Type="Int32" />
+    <Property Name="ESTADOMERCANCIA" Type="Int32" />
+    <Property Name="BALSAGRANDE" Type="Boolean" />
+    <Property Name="BALSAPEQUENA" Type="Boolean" />
+    <Property Name="IDENVIOWEB" Type="Int32" />
+    <Property Name="EMAILENVIADO" Type="Boolean" />
+    <Property Name="VGMTARA" Type="Decimal" Precision="18" Scale="4" />
+  </EntityType>
+  <ComplexType Name="ENVIOPESADA_Result">
+    <Property Type="Int32" Name="IDENVIO" Nullable="false" />
+    <Property Type="String" Name="CODPROVEEDOR" Nullable="false" MaxLength="9" />
+    <Property Type="DateTime" Name="FECHAENVIO" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="HORAENVIO" Nullable="true" Precision="23" />
+    <Property Type="String" Name="CODARTICULO" Nullable="false" MaxLength="7" />
+    <Property Type="Decimal" Name="KILOSENVIADOS" Nullable="false" Precision="18" Scale="2" />
+    <Property Type="Int32" Name="ESTADO" Nullable="false" />
+    <Property Type="String" Name="OBSERVACIONES" Nullable="false" MaxLength="300" />
+    <Property Type="String" Name="MATRICULA" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="ID_PESADA" Nullable="true" />
+    <Property Type="String" Name="ID_TICKET" Nullable="true" MaxLength="12" />
+    <Property Type="String" Name="MATRICULA1" Nullable="true" MaxLength="15" />
+    <Property Type="String" Name="REMOLQUE" Nullable="true" MaxLength="15" />
+    <Property Type="String" Name="COD_PROV" Nullable="true" MaxLength="9" />
+    <Property Type="String" Name="COD_CLIE" Nullable="true" MaxLength="9" />
+    <Property Type="Int32" Name="COD_ART" Nullable="true" />
+    <Property Type="Decimal" Name="PRECIOKG" Nullable="true" Precision="18" Scale="4" />
+    <Property Type="DateTime" Name="FECHAENTRADA" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="HORAENTRADA" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="FECHASALIDA" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="HORASALIDA" Nullable="true" Precision="23" />
+    <Property Type="Decimal" Name="PESADA1" Nullable="true" Precision="18" Scale="0" />
+    <Property Type="Decimal" Name="PESADA2" Nullable="true" Precision="18" Scale="0" />
+    <Property Type="Decimal" Name="PESADANETO" Nullable="true" Precision="18" Scale="0" />
+    <Property Type="Int32" Name="PRIMEPESADA" Nullable="true" />
+    <Property Type="Int32" Name="SECUNPESADA" Nullable="true" />
+    <Property Type="String" Name="OBSERVACIONES1" Nullable="true" MaxLength="500" />
+    <Property Type="String" Name="USERPESADA" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="INFOMODPESADA" Nullable="true" MaxLength="300" />
+    <Property Type="Int32" Name="ESTADOCAMION" Nullable="true" />
+    <Property Type="Int32" Name="ESTADOMERCANCIA" Nullable="true" />
+    <Property Type="Boolean" Name="BALSAGRANDE" Nullable="true" />
+    <Property Type="Boolean" Name="BALSAPEQUENA" Nullable="true" />
+    <Property Type="Int32" Name="IDENVIOWEB" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="PROC_ENVIOPESADA_Result">
+    <Property Type="String" Name="CODARTICULO" Nullable="false" MaxLength="7" />
+    <Property Type="String" Name="DESCRIPCION" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="MATRICULA" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="CODPROVEEDOR" Nullable="false" MaxLength="9" />
+    <Property Type="DateTime" Name="FECHAENVIO" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="HORAENVIO" Nullable="true" Precision="23" />
+    <Property Type="Int32" Name="IDENVIO" Nullable="false" />
+    <Property Type="Decimal" Name="KILOSENVIADOS" Nullable="false" Precision="18" Scale="2" />
+    <Property Type="Int32" Name="ESTADO" Nullable="false" />
+    <Property Type="Decimal" Name="PESADANETO" Nullable="true" Precision="18" Scale="0" />
+    <Property Type="Int32" Name="IDENVIOWEB" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="LISTAENVIOSFECHAPROVEEDOR_Result">
+    <Property Type="String" Name="NombreArticulo" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="Matricula" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="CodProveedor" Nullable="false" MaxLength="9" />
+    <Property Type="String" Name="NomProveedor" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="FechaEnvio" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="HoraEnvio" Nullable="true" MaxLength="8" />
+    <Property Type="Int32" Name="id" Nullable="false" />
+    <Property Type="Decimal" Name="KilosEnviados" Nullable="false" Precision="18" Scale="2" />
+    <Property Type="Int32" Name="PesoBascula" Nullable="true" />
+    <Property Type="Boolean" Name="BasculaG" Nullable="true" />
+    <Property Type="Boolean" Name="BasculaP" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="ALLCUPOSPROVEEDOR_Result">
+    <Property Type="Int32" Name="IDCUPOCAB" Nullable="false" />
+    <Property Type="Int32" Name="IDCUPOPROV" Nullable="false" />
+    <Property Type="String" Name="CODARTICULO" Nullable="false" MaxLength="7" />
+    <Property Type="String" Name="DESCRIPCION" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="CODPROVEE" Nullable="false" MaxLength="9" />
+    <Property Type="String" Name="NOMBRE" Nullable="false" MaxLength="50" />
+    <Property Type="DateTime" Name="FECHAINICIOCUPO" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="FEHAFINALCUPO" Nullable="true" Precision="23" />
+    <Property Type="Decimal" Name="PORCENTAGEASIG" Nullable="true" Precision="18" Scale="2" />
+    <Property Type="Boolean" Name="ACTIVACUPO" Nullable="false" />
+  </ComplexType>
+  <EntityType Name="CUPOKG">
+    <Key>
+      <PropertyRef Name="IDCUPOKG" />
+    </Key>
+    <Property Name="IDCUPOKG" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CUPOKILOS" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+  </EntityType>
+  <EntityType Name="CUPOPROVEEDOR">
+    <Key>
+      <PropertyRef Name="IDCUPOPROV" />
+    </Key>
+    <Property Name="IDCUPOPROV" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CODPROVEE" Type="String" Nullable="false" MaxLength="9" FixedLength="false" Unicode="false" />
+    <Property Name="CODARTICULO" Type="String" Nullable="false" MaxLength="7" FixedLength="false" Unicode="false" />
+    <Property Name="FECHAINICIOCUPO" Type="DateTime" Precision="3" />
+    <Property Name="FEHAFINALCUPO" Type="DateTime" Precision="3" />
+    <Property Name="PORCENTAGEASIG" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="ACTIVACUPO" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <ComplexType Name="LISTAENVIOSIDPROVEEDOR_Result">
+    <Property Type="String" Name="NombreArticulo" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="Matricula" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="CodProveedor" Nullable="false" MaxLength="9" />
+    <Property Type="String" Name="NomProveedor" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="FechaEnvio" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="HoraEnvio" Nullable="true" MaxLength="8" />
+    <Property Type="Int32" Name="id" Nullable="false" />
+    <Property Type="Decimal" Name="KilosEnviados" Nullable="false" Precision="18" Scale="2" />
+    <Property Type="Int32" Name="Estado" Nullable="false" />
+    <Property Type="Int32" Name="PesoBascula" Nullable="true" />
+    <Property Type="Boolean" Name="BasculaG" Nullable="true" />
+    <Property Type="Boolean" Name="BasculaP" Nullable="true" />
+    <Property Type="String" Name="Observaciones" Nullable="false" MaxLength="300" />
+  </ComplexType>
+  <ComplexType Name="CANCELAENVIOEMAIL_Result">
+    <Property Type="Int32" Name="IDENVIO" Nullable="false" />
+    <Property Type="DateTime" Name="FECHAENVIO" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="HORAENVIO" Nullable="true" Precision="23" />
+    <Property Type="String" Name="MATRICULA" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="NOMBRE" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="EMAIL" Nullable="true" MaxLength="100" />
+  </ComplexType>
+  <ComplexType Name="RECUPERAENVIOSPROVEE_Result">
+    <Property Type="String" Name="CODARTICULO" Nullable="false" MaxLength="7" />
+    <Property Type="String" Name="MATRICULA" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="CODPROVEEDOR" Nullable="false" MaxLength="9" />
+    <Property Type="String" Name="FECHAENVIO" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="HORAENVIO" Nullable="true" MaxLength="8" />
+    <Property Type="Int32" Name="IDENVIO" Nullable="false" />
+    <Property Type="Decimal" Name="KILOSENVIADOS" Nullable="false" Precision="18" Scale="2" />
+    <Property Type="Int32" Name="ESTADO" Nullable="false" />
+    <Property Type="String" Name="Observaciones" Nullable="false" MaxLength="300" />
+  </ComplexType>
+  <ComplexType Name="RECUPERAENVIOSPROVEE1_Result">
+    <Property Type="String" Name="CODARTICULO" Nullable="false" MaxLength="7" />
+    <Property Type="String" Name="MATRICULA" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="CODPROVEEDOR" Nullable="false" MaxLength="9" />
+    <Property Type="String" Name="FECHAENVIO" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="HORAENVIO" Nullable="true" MaxLength="8" />
+    <Property Type="Int32" Name="IDENVIO" Nullable="false" />
+    <Property Type="Decimal" Name="KILOSENVIADOS" Nullable="false" Precision="18" Scale="2" />
+    <Property Type="Int32" Name="ESTADO" Nullable="false" />
+    <Property Type="String" Name="Observaciones" Nullable="false" MaxLength="300" />
+  </ComplexType>
+  <ComplexType Name="TODOSLOSENVIOSPROVEE_Result">
+    <Property Type="String" Name="NombreArticulo" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="Matricula" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="CodProveedor" Nullable="false" MaxLength="9" />
+    <Property Type="String" Name="NomProveedor" Nullable="false" MaxLength="50" />
+    <Property Type="DateTime" Name="FechaEnvio" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="HoraEnvio" Nullable="true" Precision="23" />
+    <Property Type="Int32" Name="id" Nullable="false" />
+    <Property Type="Decimal" Name="KilosEnviados" Nullable="false" Precision="18" Scale="2" />
+    <Property Type="Int32" Name="Estado" Nullable="false" />
+    <Property Type="Decimal" Name="PesoBascula" Nullable="false" Precision="18" Scale="0" />
+    <Property Type="Boolean" Name="BasculaG" Nullable="true" />
+    <Property Type="Boolean" Name="BasculaP" Nullable="true" />
+    <Property Type="String" Name="Observaciones" Nullable="false" MaxLength="300" />
+  </ComplexType>
+</Schema>

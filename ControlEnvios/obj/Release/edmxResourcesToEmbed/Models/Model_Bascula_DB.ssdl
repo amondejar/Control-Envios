@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="BasculaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="ARTICULO">
+    <Key>
+      <PropertyRef Name="ID_ARTICULO" />
+    </Key>
+    <Property Name="ID_ARTICULO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DESCRIPCION" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="CODARTICULO" Type="varchar" MaxLength="7" Nullable="false" />
+    <Property Name="ACTIVAWEB" Type="bit" />
+  </EntityType>
+  <EntityType Name="CUPOKG">
+    <Key>
+      <PropertyRef Name="IDCUPOKG" />
+    </Key>
+    <Property Name="IDCUPOKG" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CUPOKILOS" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CUPOPROVEEDOR">
+    <Key>
+      <PropertyRef Name="IDCUPOPROV" />
+    </Key>
+    <Property Name="IDCUPOPROV" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CODPROVEE" Type="varchar" MaxLength="9" Nullable="false" />
+    <Property Name="CODARTICULO" Type="varchar" MaxLength="7" Nullable="false" />
+    <Property Name="FECHAINICIOCUPO" Type="datetime" />
+    <Property Name="FEHAFINALCUPO" Type="datetime" />
+    <Property Name="PORCENTAGEASIG" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="ACTIVACUPO" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ENVIOMERCANCIA">
+    <Key>
+      <PropertyRef Name="IDENVIO" />
+    </Key>
+    <Property Name="IDENVIO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CODPROVEEDOR" Type="varchar" MaxLength="9" Nullable="false" />
+    <Property Name="FECHAENVIO" Type="datetime" Nullable="false" />
+    <Property Name="HORAENVIO" Type="datetime" />
+    <Property Name="CODARTICULO" Type="varchar" MaxLength="7" Nullable="false" />
+    <Property Name="KILOSENVIADOS" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="ESTADO" Type="int" Nullable="false" />
+    <Property Name="OBSERVACIONES" Type="varchar" MaxLength="300" Nullable="false" />
+    <Property Name="MATRICULA" Type="varchar" MaxLength="50" />
+    <Property Name="SENDEMAIL" Type="bit" Nullable="false" />
+    <Property Name="TIENENETO" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ESTADOMERCANCIA">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="ESTADOMERCANCIA" Type="varchar" MaxLength="150" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MODULO">
+    <Key>
+      <PropertyRef Name="IdModulo" />
+    </Key>
+    <Property Name="IdModulo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="NombreModulo" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Acction" Type="varchar" MaxLength="50" />
+    <Property Name="Controller" Type="varchar" MaxLength="50" />
+    <Property Name="icono" Type="varchar" MaxLength="50" />
+    <Property Name="bgName" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="PESADABASCULA">
+    <Key>
+      <PropertyRef Name="ID_PESADA" />
+    </Key>
+    <Property Name="ID_PESADA" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ID_TICKET" Type="varchar" MaxLength="12" Nullable="false" />
+    <Property Name="MATRICULA" Type="varchar" MaxLength="15" Nullable="false" />
+    <Property Name="REMOLQUE" Type="varchar" MaxLength="15" />
+    <Property Name="COD_PROV" Type="varchar" MaxLength="9" />
+    <Property Name="COD_CLIE" Type="varchar" MaxLength="9" />
+    <Property Name="COD_ART" Type="int" />
+    <Property Name="PRECIOKG" Type="decimal" Precision="18" Scale="4" />
+    <Property Name="FECHAENTRADA" Type="datetime" />
+    <Property Name="HORAENTRADA" Type="datetime" />
+    <Property Name="FECHASALIDA" Type="datetime" />
+    <Property Name="HORASALIDA" Type="datetime" />
+    <Property Name="PESADA1" Type="decimal" Precision="18" Scale="0" />
+    <Property Name="PESADA2" Type="decimal" Precision="18" Scale="0" />
+    <Property Name="PESADANETO" Type="decimal" Precision="18" Scale="0" />
+    <Property Name="PRIMEPESADA" Type="int" />
+    <Property Name="SECUNPESADA" Type="int" />
+    <Property Name="OBSERVACIONES" Type="varchar" MaxLength="500" />
+    <Property Name="USERPESADA" Type="varchar" MaxLength="50" />
+    <Property Name="INFOMODPESADA" Type="varchar" MaxLength="300" />
+    <Property Name="ESTADOCAMION" Type="int" />
+    <Property Name="ESTADOMERCANCIA" Type="int" />
+    <Property Name="BALSAGRANDE" Type="bit" />
+    <Property Name="BALSAPEQUENA" Type="bit" />
+    <Property Name="IDENVIOWEB" Type="int" />
+    <Property Name="EMAILENVIADO" Type="bit" />
+    <Property Name="VGMTARA" Type="decimal" Precision="18" Scale="4" />
+  </EntityType>
+  <EntityType Name="PROVEEDOR">
+    <Key>
+      <PropertyRef Name="CODPROVEEDOR" />
+    </Key>
+    <Property Name="CODPROVEEDOR" Type="varchar" MaxLength="9" Nullable="false" />
+    <Property Name="NOMBRE" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="CIF" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="DIRECCION" Type="varchar" MaxLength="50" />
+    <Property Name="POBLACION" Type="varchar" MaxLength="50" />
+    <Property Name="PROVINCIA" Type="varchar" MaxLength="50" />
+    <Property Name="CODPOSTAL" Type="varchar" MaxLength="6" />
+    <Property Name="OBSERVACIONES" Type="varchar" MaxLength="300" />
+    <Property Name="PASSWORD" Type="varchar" MaxLength="100" />
+    <Property Name="EMAIL" Type="varchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="USUARIOS">
+    <Key>
+      <PropertyRef Name="ID_USUARIO" />
+    </Key>
+    <Property Name="ID_USUARIO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ID_PERFIL" Type="int" Nullable="false" />
+    <Property Name="NOMBRE" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="ALIAS" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="PASSWORD" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="CHECKWEBADMIN" Type="bit" Nullable="false" />
+  </EntityType>
+  <Function Name="ALLCUPOSPROVEEDOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="CANCELAENVIO" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="CANCELAENVIOEMAIL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="ENVIOPESADA" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="fechaHoy" Type="datetime" Mode="In" />
+    <Parameter Name="Proveedor" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="KILOS_SEMANA_PROVEEDOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="fechaInicio" Type="datetime" Mode="In" />
+    <Parameter Name="fechaFin" Type="datetime" Mode="In" />
+    <Parameter Name="codproveedor" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="LISTAENVIOSFECHAPROVEEDOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="fechaEnvio" Type="datetime" Mode="In" />
+    <Parameter Name="fechaFin" Type="datetime" Mode="In" />
+    <Parameter Name="codproveedor" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="LISTAENVIOSIDPROVEEDOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="idEnvio" Type="int" Mode="In" />
+  </Function>
+  <Function Name="TODOSLOSENVIOSPROVEE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <EntityContainer Name="BasculaModelStoreContainer">
+    <EntitySet Name="ARTICULO" EntityType="Self.ARTICULO" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CUPOKG" EntityType="Self.CUPOKG" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CUPOPROVEEDOR" EntityType="Self.CUPOPROVEEDOR" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ENVIOMERCANCIA" EntityType="Self.ENVIOMERCANCIA" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ESTADOMERCANCIA" EntityType="Self.ESTADOMERCANCIA" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MODULO" EntityType="Self.MODULO" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PESADABASCULA" EntityType="Self.PESADABASCULA" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PROVEEDOR" EntityType="Self.PROVEEDOR" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="USUARIOS" EntityType="Self.USUARIOS" Schema="dbo" store:Type="Tables" />
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewBag.Title = ControlEnvios.Resources.Envios.TituloEnvioMercancia;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="header-clear"></div>
+<div class="row">
+    <div class="col-md-12 title mb-25">
+        <div class="col-md-6">
+            <h2 class="holidayleave-title">@ControlEnvios.Resources.Envios.TituloEnvioMercancia</h2>
+        </div>
+    </div>
+</div>
+
+<div class="alert" id="divMessage" style="display:none">
+</div>
+<hr class="holidayleave-hr" />
+<div class="col-md-12 mt-15">
+    <div id="itemList">
+        <!---->
+    </div>
+    <div id="pager"></div>
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        var error = @Html.Raw(Json.Encode(TempData["Error"]));
+        var success = @Html.Raw(Json.Encode(TempData["success"]));
+        var response;
+        var message;
+        debugger
+        if(error != null ){
+            showTostMessage(false, error);
+            //response = false;
+            //message = error;
+        } else if(success != null) {
+            showTostMessage(true, success);
+            //response = true;
+            //message = success;
+        }
+
+    </script>
+}
+@Scripts.Render("~/bundles/Envio")
+
+
+
+
+

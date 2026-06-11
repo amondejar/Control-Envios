@@ -1,0 +1,170 @@
+﻿
+@model ControlEnvios.Models.ModeloEnvio
+@using ControlEnvios.Resources
+@using Newtonsoft.Json;
+
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+<div class="row text-center">
+    @if (Model.Action == "Create")
+    {
+        <h3 class="sitetitle mt-0">
+            @Envios.Create
+        </h3>
+    }
+    else
+    {
+        <h3 class="sitetitle mt-0">
+            @Envios.Edit
+
+        </h3>
+    }
+
+    <hr />
+
+</div>
+
+<div class="row">
+    <div class="col-md-offset-3 col-md-6">
+
+        <div class="panel-body log-sec">
+            @using (Html.BeginForm(Model.Action, "Envios", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "formEnvio" }))
+            {
+               
+
+                @Html.AntiForgeryToken()
+                if(Model.Action == "Edit")
+                {
+                    <div>
+                        @Html.HiddenFor(m => m.id)
+                    </div>
+                }
+               
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    <div class="col-xs-5 col-md-7">
+                        @Html.LabelFor(m => m.CodProveedor)
+                        @Html.TextBoxFor(m => m.CodProveedor, new
+                   {
+                       @class = "form-control",
+                       @readonly = "readonly",
+                       @style = "text-align:center",
+                       @Value = (Model.CodProveedor.ToString()) == "" ? "" : Model.CodProveedor.ToString()
+                   })
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <span>@Html.LabelFor(m => m.NomProveedor)  @Model.NomProveedor.ToString()</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <hr />
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-6">
+                        @Html.LabelFor(m => m.FechaEnvio)
+                        <div class="input-group date datetimepicker">
+                            @Html.TextBoxFor(model => model.FechaEnvio, new { @class = "form-control", @onkeydown = "return false;", @Value = DateTime.Now.ToShortDateString() })
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <hr />
+                    <div class="col-xs-6">
+                        <span class="intput-group-addon">
+                            <span>@Html.LabelFor(m => m.HoraEnvio) </span>
+                            <span>@Html.TextBoxFor(m => m.HoraEnvio, new { @class = "form-control"})</span>
+
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <hr />
+                    <div class="col-xs-6">
+                        <span class="intput-group-addon">
+                            <span>@Html.LabelFor(m => m.Matricula) </span>
+                            <span>@Html.TextBoxFor(m => m.Matricula, new { @class = "form-control" })</span>
+                            @Html.ValidationMessageFor(x => x.Matricula, "", new { @class = "text-danger" })
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <hr />
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        @Html.LabelFor(m => m.TipoArtculos)
+                        @Html.DropDownListFor(model => model.Articulo, (IEnumerable<SelectListItem>)ViewBag.TiposArticulos, new { @class = "form-control", @id = "CodProveedor" })
+                        @Html.HiddenFor(m => m.Articulo)
+                        @Html.ValidationMessageFor(x => x.Articulo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <hr />
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-5">
+                        @Html.LabelFor(m => m.KilosEnviados)
+                        @Html.TextBoxFor(m => m.KilosEnviados, new { @class = "form-control number" })
+                        @Html.ValidationMessageFor(m => m.KilosEnviados, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <hr />
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        @Html.LabelFor(m => m.Observaciones)
+                        @Html.TextAreaFor(m => m.Observaciones, new { @class = "form-control", @rows = 5 })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <hr />
+                    </div>
+                </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input type="submit" class="btn btn-success btn-paysheetreviewrequest"value="@Envios.Create" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <!-- Button -->
+                            <a href="@Url.Action("Index", "Home")" class="btn btn-success btn-paysheetreviewrequest">@Envios.Atras</a>
+                        </div>
+                    </div>
+
+            }
+        </div>
+    </div>
+</div>
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        <p>@TempData["Error"]</p>
+    </div>
+}
+<!-- Javascript request error  -->
+
+ @Scripts.Render("~/bundles/jqueryval")
+
+<script type="text/javascript">
+
+    $('.datetimepicker').datetimepicker({
+        format: 'DD/MM/YYYY HH:mm',
+        ignoreReadonly: true,
+        defaultDate: moment(),
+        locale: localStorage.getItem("CurrentCulture"),
+        keepOpen: true
+    }).on('dp.change', function (ev) {
+        $(this).datetimepicker('hide');
+        });
+</script>

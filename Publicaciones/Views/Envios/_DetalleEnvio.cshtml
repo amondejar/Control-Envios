@@ -1,0 +1,86 @@
+﻿@model ControlEnvios.Models.ModeloEnvio
+@using ControlEnvios.Resources
+
+<div class="row text-center Envio-detail-title">
+    <h3 class="sitetitle">Detalle del Envio</h3>
+    <hr />
+</div>
+<div class="detail-EnvioProveedor">
+    @if (Model != null)
+    {
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-6">
+                <label for="">@Envios.CodProvEnvio</label>
+                <p>@Model.CodProveedor</p>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-6">
+                <label for="">@Envios.MatriculaEnvio</label>
+                <p>@Model.Matricula</p>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-6">
+                <label for="">@Envios.FechaEnvio</label>
+                <p>@Model.FechaEnvio</p>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-6">
+                <label for="">@Envios.HoraEnvio</label>
+                <p>@Model.HoraEnvio</p>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-6">
+                <label for="">@Envios.ArticuloEnvio</label>
+                <p>@Model.Articulo</p>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-6">
+                <label for="">@Envios.KilosEnvio</label>
+                <p>@Model.KilosEnviados</p>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-6">
+                <label for="">Estado Envio</label>
+                @{
+                    string _strEstadoEnvio = string.Empty;
+                    switch(Model.EstadoEnvio)
+                    {
+                        case 0:
+                            _strEstadoEnvio = "Enviado";
+                            break;
+                        case 1:
+                            _strEstadoEnvio = "Recepcionado";
+                            break;
+                        case 2:
+                            _strEstadoEnvio = "Pesado";
+                            break;
+                    }
+                }
+                <p>@_strEstadoEnvio</p>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-6">
+                <label for="">Pesada Neto</label>
+                <p>@Model.PesoNetoProveedor</p>
+            </div>
+        </div>
+        <div class="panel-body log-sec">
+
+            <div class="form-group mt-15">
+                <!-- Button -->
+                <a href="javascript:void(0);" class="btn btn-success btn-paysheetreviewrequest btnBack">Atras</a>
+            </div>
+
+        </div>
+    }
+    else
+    {
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="form-group">
+                <p>No hay resultados</p>
+            </div>
+        </div>
+    }
+</div>

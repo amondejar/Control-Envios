@@ -1,0 +1,42 @@
+﻿
+@using ControlEnvios.Models
+@{ 
+    var controller = ViewContext.RouteData.Values["controller"].ToString();
+    ModelProveedor p = new ModelProveedor();
+    p.CodProveedor = (System.Web.HttpContext.Current.Session["Proveedor"] as PROVEEDOR).CODPROVEEDOR.ToString();
+    p.NombreProvedor = (System.Web.HttpContext.Current.Session["Proveedor"] as PROVEEDOR).NOMBRE.ToString();
+}
+
+@*@*@if (Request.IsAuthenticated)
+{*@
+    @*<div class="snap-drawer snap-drawer-left sidebar-dark-clean">
+
+        <div class="sidebar-header"><a class="close-sidebar" href="#"><i class="fa fa-times"></i></a></div>
+        <div class="sidebar-divider no-bottom"></div>
+        <div class="sidebar-menu">           
+        </div>
+    </div>*@<!-- end snap-left-->
+    <div class="snap-drawer snap-drawer-right sidebar-dark-clean" >
+        <div class="sidebar-header"><a class="close-sidebar" href="#"><i class="fa fa-times"></i></a></div>
+        <div class="sidebar-menu">
+            if @(p != null){
+            @*<div id="alingDerecha" style="width:100%;padding-top:20px;padding-left:70px">
+                <div id="imgEmpleado" style="width:110px;height:150px;border:1px solid white">
+                    <img class="img-responsive" src="@userDetail.Foto" style="display:block;width:100%;height:100%" alt="" />
+                </div>
+            </div>*@
+
+            @*<span>@(p.CodProveedor.ToString().ToUpper() + " " + p.NombreProvedor.ToString().ToUpper())</span>
+            @*}*@
+            @*<a class="menu-item" href="@Url.Action("Perfil", "Account")">Datos Proveedor</a>*@
+            @*@using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <a href="javascript:document.getElementById('logoutForm').submit()" class="menu-item">Desconectar</a>
+
+            }*@
+
+        </div>
+    </div><!-- end snap-right-->
+@*}*@
