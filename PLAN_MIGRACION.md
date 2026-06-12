@@ -125,9 +125,12 @@ ControlEnvios.sln  (nuevo, .NET 8)
   `Proveedor`, `Envio`, `Articulo`, `CupoProveedor`, `CupoGlobal`, `Usuario`, `Modulo`, `EstadoMercancia`,
   `PesadaBascula` + enums `EstadoEnvio`/`PerfilUsuario`. Nomenclatura limpia y tipos modernos (`DateOnly`/`TimeOnly`).
 - [x] Mapeo propiedad ↔ columna documentado en [`docs/FASE3-MAPEO-ENTIDADES.md`](docs/FASE3-MAPEO-ENTIDADES.md).
-- [ ] *(Requiere BD)* Generar/validar el `DbContext` real (scaffold Database-First) y configuraciones Fluent API.
-- [ ] *(Requiere BD)* Mapear procedimientos almacenados (`ENVIOPESADA`, `LISTAENVIOSIDPROVEEDOR`, `KILOS_SEMANA_PROVEEDOR`, etc.).
-- [ ] Repositorios/servicios de infraestructura con `DbContext` inyectado y ciclo de vida correcto.
+- [x] **`BasculaDbContext` + configuraciones Fluent API** (mapeo a tablas/columnas legacy) escritas "en seco" sin BD.
+- [x] **Interfaces de repositorio** en Application (`IProveedorRepository`, `IEnvioRepository`, `ICupoRepository`, etc.) + `IUnitOfWork`.
+- [x] **Implementaciones EF Core** de los repositorios + DI condicional (DbContext solo si hay cadena de conexión).
+- [x] Validación del modelo EF por tests (11 tests: construcción del modelo, mapeo de las 9 tablas, nombres de columna).
+- [ ] *(Requiere BD)* Validar el modelo contra la BD real (scaffold de contraste) y ajustar tipos/longitudes.
+- [ ] *(Requiere BD)* Mapear el resto de procedimientos almacenados (`ENVIOPESADA`, `LISTAENVIOSIDPROVEEDOR`, `LISTAENVIOSFECHAPROVEEDOR`, `CANCELAENVIO`, `CANCELAENVIOEMAIL`, `TODOSLOSENVIOSPROVEE`). `KILOS_SEMANA_PROVEEDOR` ya esbozado con `SqlQueryRaw`.
 - [ ] *(Requiere BD)* Pruebas de integración contra una BD de pruebas (no producción).
 
 ### Fase 4 — Lógica de negocio (capa Application)
