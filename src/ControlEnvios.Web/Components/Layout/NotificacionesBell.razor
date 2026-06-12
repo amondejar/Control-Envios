@@ -1,0 +1,84 @@
+@using ControlEnvios.Application.Abstractions.Persistence
+@using ControlEnvios.Domain.Entities
+@inject INotificacionRepository Notificaciones
+@inject AuthenticationStateProvider AuthProvider
+
+<MudBadge Content="_noLeidas" Color="Color.Error" Overlap="true" Bordered="true" Visible="_noLeidas > 0">
+    <MudIconButton Icon="@Icons.Material.Filled.Notifications" Color="Color.Inherit" OnClick="Alternar" />
+</MudBadge>
+
+<MudPopover Open="_abierto" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight"
+            Class="pa-2" Style="max-width:380px;max-height:60vh;overflow:auto;">
+    <div class="d-flex align-center px-2 py-1">
+        <MudText Typo="Typo.subtitle1">Notificaciones</MudText>
+        <MudSpacer />
+        <MudIconButton Icon="@Icons.Material.Filled.Close" Size="Size.Small" OnClick="@(() => _abierto = false)" />
+    </div>
+    <MudDivider Class="mb-1" />
+    @if (_items.Count == 0)
+    {
+        <MudText Typo="Typo.body2" Class="px-3 py-3 mud-text-secondary">No tienes notificaciones.</MudText>
+    }
+    else
+    {
+        @foreach (var n in _items)
+        {
+            <MudPaper Elevation="0" Class="px-3 py-2" Style="white-space:normal;">
+                <div class="d-flex align-center">
+                    <MudIcon Icon="@Icons.Material.Filled.LocalShipping" Color="Color.Error" Size="Size.Small" Class="mr-2" />
+                    <MudText Typo="Typo.body2"><b>@n.Titulo</b></MudText>
+                </div>
+                <MudText Typo="Typo.body2">@n.Mensaje</MudText>
+                <MudText Typo="Typo.caption" Class="mud-text-secondary">@n.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</MudText>
+                <MudDivider Class="my-1" />
+            </MudPaper>
+        }
+    }
+</MudPopover>
+
+<MudOverlay Visible="_abierto" OnClick="@(() => _abierto = false)" AutoClose="true" />
+
+@code {
+    private bool _abierto;
+    private int _noLeidas;
+    private IReadOnlyList<Notificacion> _items = [];
+    private string? _codProveedor;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthProvider.GetAuthenticationStateAsync();
+        _codProveedor = state.User.Identity?.Name;
+        await RefrescarContadorAsync();
+    }
+
+    private async Task RefrescarContadorAsync()
+    {
+        if (_codProveedor is null)
+        {
+            return;
+        }
+        try { _noLeidas = await Notificaciones.ContarNoLeidasAsync(_codProveedor); }
+        catch (Exception) { _noLeidas = 0; }
+    }
+
+    private async Task Alternar()
+    {
+        _abierto = !_abierto;
+        if (_abierto && _codProveedor is not null)
+        {
+            try
+            {
+                _items = await Notificaciones.UltimasAsync(_codProveedor, 20);
+                if (_noLeidas > 0)
+                {
+                    await Notificaciones.MarcarTodasLeidasAsync(_codProveedor);
+                    _noLeidas = 0;
+                }
+            }
+            catch (Exception)
+            {
+                // sin conexión: deja la lista como está
+            }
+        }
+    }
+}

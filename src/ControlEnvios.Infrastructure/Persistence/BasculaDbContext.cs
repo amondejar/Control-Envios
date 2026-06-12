@@ -23,6 +23,7 @@ public class BasculaDbContext : DbContext
     public DbSet<Modulo> Modulos => Set<Modulo>();
     public DbSet<EstadoMercancia> EstadosMercancia => Set<EstadoMercancia>();
     public DbSet<PesadaBascula> PesadasBascula => Set<PesadaBascula>();
+    public DbSet<Notificacion> Notificaciones => Set<Notificacion>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

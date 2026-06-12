@@ -17,6 +17,7 @@ public static class DependencyInjection
         services.AddScoped<ICupoService, CupoService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IEnvioService, EnvioService>();
+        services.AddScoped<ICancelarEnvioService, CancelarEnvioService>();
         return services;
     }
 

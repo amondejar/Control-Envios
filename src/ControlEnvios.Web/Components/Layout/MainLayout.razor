@@ -16,6 +16,9 @@
         <MudSpacer />
         <MudIconButton Icon="@(_isDarkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)"
                        Color="Color.Inherit" OnClick="@(() => _isDarkMode = !_isDarkMode)" />
+        <AuthorizeView Roles="Proveedor" Context="prov">
+            <NotificacionesBell />
+        </AuthorizeView>
         <AuthorizeView>
             <MudMenu Icon="@Icons.Material.Filled.AccountCircle" Color="Color.Inherit" AnchorOrigin="Origin.BottomRight">
                 <MudText Typo="Typo.body2" Class="px-4 py-2">

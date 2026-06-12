@@ -132,6 +132,24 @@ public sealed class EstadoMercanciaConfiguration : IEntityTypeConfiguration<Esta
     }
 }
 
+public sealed class NotificacionConfiguration : IEntityTypeConfiguration<Notificacion>
+{
+    public void Configure(EntityTypeBuilder<Notificacion> b)
+    {
+        b.ToTable("NOTIFICACION");
+        b.HasKey(x => x.Id);
+        b.Property(x => x.Id).HasColumnName("Id");
+        b.Property(x => x.CodigoProveedor).HasColumnName("CodProveedor");
+        b.Property(x => x.Tipo).HasColumnName("Tipo");
+        b.Property(x => x.Titulo).HasColumnName("Titulo");
+        b.Property(x => x.Mensaje).HasColumnName("Mensaje");
+        b.Property(x => x.IdEnvio).HasColumnName("IdEnvio");
+        b.Property(x => x.FechaCreacion).HasColumnName("FechaCreacion");
+        b.Property(x => x.Leida).HasColumnName("Leida");
+        b.Property(x => x.FechaLeida).HasColumnName("FechaLeida");
+    }
+}
+
 public sealed class PesadaBasculaConfiguration : IEntityTypeConfiguration<PesadaBascula>
 {
     public void Configure(EntityTypeBuilder<PesadaBascula> b)

@@ -2,11 +2,13 @@
 @attribute [Authorize(Roles = "Gestor")]
 @using ControlEnvios.Application.Abstractions.Persistence
 @using ControlEnvios.Application.Consultas
+@using ControlEnvios.Application.Envios
 @using ControlEnvios.Domain.Entities
 @using ControlEnvios.Domain.Enums
 @inject IProveedorRepository ProveedorRepo
 @inject IArticuloRepository ArticuloRepo
 @inject IConsultaEnviosService Consultas
+@inject ICancelarEnvioService CancelarService
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
@@ -78,6 +80,13 @@
                     <MudIconButton Icon="@Icons.Material.Filled.Visibility" Size="Size.Small" Color="Color.Primary"
                                    OnClick="@(() => VerDetalle(context.Item))" />
                 </MudTooltip>
+                @if (context.Item.Estado == (int)EstadoEnvio.Comunicado)
+                {
+                    <MudTooltip Text="Cancelar envío (avisa al proveedor)">
+                        <MudIconButton Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Color="Color.Error"
+                                       OnClick="@(() => Cancelar(context.Item))" />
+                    </MudTooltip>
+                }
             </CellTemplate>
         </TemplateColumn>
     </Columns>
@@ -167,5 +176,31 @@
         var parameters = new DialogParameters<DetalleEnvioDialog> { { x => x.Envio, envio } };
         var options = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true };
         return DialogService.ShowAsync<DetalleEnvioDialog>("Detalle del envío", parameters, options);
+    }
+
+    private async Task Cancelar(ConsultaEnvio envio)
+    {
+        var confirma = await DialogService.ShowMessageBoxAsync(
+            "Cancelar envío",
+            $"¿Cancelar el envío de {envio.NombreProveedor} (matrícula {envio.Matricula})? Se notificará al proveedor.",
+            yesText: "Cancelar envío", cancelText: "Volver");
+        if (confirma != true)
+        {
+            return;
+        }
+
+        try
+        {
+            var res = await CancelarService.CancelarAsync(envio.Id);
+            Snackbar.Add(res.Mensaje ?? "", res.Exito ? Severity.Success : Severity.Error);
+            if (res.Exito)
+            {
+                await Buscar();
+            }
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("No se pudo cancelar el envío.", Severity.Error);
+        }
     }
 }

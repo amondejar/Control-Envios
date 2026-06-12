@@ -1,4 +1,5 @@
 using ControlEnvios.Application.Autenticacion;
+using ControlEnvios.Domain.Entities;
 using ControlEnvios.Domain.Enums;
 using ControlEnvios.Infrastructure.Consultas;
 using ControlEnvios.Infrastructure.Persistence;
@@ -96,5 +97,35 @@ public class RealDbSmokeTests
         {
             Assert.True(filas[0].Id > 0);
         }
+    }
+
+    [Fact]
+    public async Task Notificaciones_alta_conteo_y_marcar_leida()
+    {
+        if (string.IsNullOrWhiteSpace(Conn))
+        {
+            return; // sin BD configurada → omitido
+        }
+
+        await using var ctx = Crear();
+        var repo = new NotificacionRepository(ctx, TimeProvider.System);
+        const string cod = "ZZTEST";
+
+        await ctx.Notificaciones.Where(n => n.CodigoProveedor == cod).ExecuteDeleteAsync();
+
+        await repo.AddAsync(new Notificacion
+        {
+            CodigoProveedor = cod, Tipo = "Test", Titulo = "Prueba", Mensaje = "x",
+            FechaCreacion = DateTime.Now, Leida = false,
+        });
+        await ctx.SaveChangesAsync();
+
+        Assert.Equal(1, await repo.ContarNoLeidasAsync(cod));
+        Assert.Single(await repo.UltimasAsync(cod, 10));
+
+        await repo.MarcarTodasLeidasAsync(cod);
+        Assert.Equal(0, await repo.ContarNoLeidasAsync(cod));
+
+        await ctx.Notificaciones.Where(n => n.CodigoProveedor == cod).ExecuteDeleteAsync(); // limpieza
     }
 }

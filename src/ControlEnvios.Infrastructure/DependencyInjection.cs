@@ -41,6 +41,7 @@ public static class DependencyInjection
         services.AddScoped<IEnvioRepository, EnvioRepository>();
         services.AddScoped<ICupoRepository, CupoRepository>();
         services.AddScoped<IModuloRepository, ModuloRepository>();
+        services.AddScoped<INotificacionRepository, NotificacionRepository>();
         services.AddScoped<Application.Consultas.IConsultaEnviosService, Consultas.ConsultaEnviosService>();
 
         return services;
