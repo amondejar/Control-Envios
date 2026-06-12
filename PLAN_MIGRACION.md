@@ -99,15 +99,15 @@ ControlEnvios.sln  (nuevo, .NET 8)
 
 > Cada fase es un conjunto de PRs sobre la rama `migracion-blazor-net8` (o sub-ramas que la integran). La app legacy en `main` sigue operativa hasta el corte final.
 
-### Fase 0 — Preparación del repositorio *(rápida)*
-- [ ] Limpiar el repo: añadir `.gitignore` correcto para .NET, sacar `obj/`, `bin/`, `.vs/`, `packages/` y la carpeta `Publicaciones/` del control de versiones.
-- [ ] Documentar el arranque del legacy (cómo compilar/ejecutar hoy) para tener referencia de comportamiento.
-- [ ] Inventario de pantallas y flujos actuales con capturas (línea base de UX).
+### Fase 0 — Preparación del repositorio *(rápida)* ✅ COMPLETADA
+- [x] Limpiar el repo: `.gitignore` correcto para .NET; `obj/`, `Publicaciones/` y `.csproj.user` fuera del control de versiones (776 → 302 archivos).
+- [x] Documentar el arranque del legacy → [`docs/LEGACY.md`](docs/LEGACY.md).
+- [x] Inventario de pantallas y flujos → en `docs/LEGACY.md`. *(Pendiente: capturas — requiere la app en ejecución con BD accesible.)*
 
-### Fase 1 — Caracterización funcional *(red de seguridad)*
-- [ ] Documentar reglas de negocio críticas, sobre todo **el cálculo de cupos** (`CalculaPorcentageAsignado`, `KilosEnviadosPorveedorSemana`, semana ISO).
-- [ ] Catalogar todos los procedimientos almacenados usados y su contrato (parámetros/resultados).
-- [ ] Definir casos de prueba de aceptación por módulo (Envios, Gestor, Producción, Login).
+### Fase 1 — Caracterización funcional *(red de seguridad)* ✅ COMPLETADA
+- [x] Reglas de negocio (cupos, login por rol, cancelación+email, fechas de semana) → [`docs/FASE1-CARACTERIZACION.md`](docs/FASE1-CARACTERIZACION.md).
+- [x] Catálogo de procedimientos almacenados con su contrato y discrepancias detectadas.
+- [x] Casos de prueba de aceptación por módulo (LOGIN/ENV/GES/PRO).
 
 ### Fase 2 — Andamiaje del proyecto destino
 - [ ] Crear la solución .NET 8 con la estructura `src/` + `tests/` (Domain, Application, Infrastructure, Web).
