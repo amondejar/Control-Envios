@@ -1,6 +1,9 @@
 @using ControlEnvios.Application.Abstractions.Persistence
 @using ControlEnvios.Domain.Entities
+@using ControlEnvios.Web.RealTime
+@implements IDisposable
 @inject INotificacionRepository Notificaciones
+@inject NotificacionBroadcaster Broadcaster
 @inject AuthenticationStateProvider AuthProvider
 
 <MudBadge Content="_noLeidas" Color="Color.Error" Overlap="true" Bordered="true" Visible="_noLeidas > 0">
@@ -43,13 +46,32 @@
     private int _noLeidas;
     private IReadOnlyList<Notificacion> _items = [];
     private string? _codProveedor;
+    private IDisposable? _suscripcion;
 
     protected override async Task OnInitializedAsync()
     {
         var state = await AuthProvider.GetAuthenticationStateAsync();
         _codProveedor = state.User.Identity?.Name;
+        _suscripcion = Broadcaster.Suscribir(OnNotificada);
         await RefrescarContadorAsync();
     }
+
+    // Llamado desde el circuito que cancela; marshalamos al circuito de esta campana.
+    private Task OnNotificada(string codigoProveedor)
+    {
+        if (codigoProveedor != _codProveedor)
+        {
+            return Task.CompletedTask;
+        }
+
+        return InvokeAsync(async () =>
+        {
+            await RefrescarContadorAsync();
+            StateHasChanged();
+        });
+    }
+
+    public void Dispose() => _suscripcion?.Dispose();
 
     private async Task RefrescarContadorAsync()
     {

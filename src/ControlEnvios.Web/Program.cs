@@ -1,7 +1,9 @@
 using System.Security.Claims;
 using ControlEnvios.Application;
+using ControlEnvios.Application.Abstractions.RealTime;
 using ControlEnvios.Application.Autenticacion;
 using ControlEnvios.Infrastructure;
+using ControlEnvios.Web.RealTime;
 using ControlEnvios.Web.Authentication;
 using ControlEnvios.Web.Components;
 using Microsoft.AspNetCore.Authentication;
@@ -25,6 +27,10 @@ builder.Services.AddRazorComponents()
 
 // Componentes de UI (MudBlazor).
 builder.Services.AddMudServices();
+
+// Avisos en tiempo real entre circuitos (Blazor Server / SignalR).
+builder.Services.AddSingleton<NotificacionBroadcaster>();
+builder.Services.AddSingleton<INotificacionNotifier>(sp => sp.GetRequiredService<NotificacionBroadcaster>());
 
 // Capas de aplicación e infraestructura.
 builder.Services.AddApplication();

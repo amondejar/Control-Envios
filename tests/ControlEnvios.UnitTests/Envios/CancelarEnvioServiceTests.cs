@@ -24,7 +24,8 @@ public class CancelarEnvioServiceTests
         envios.Envios.Add(EnvioComunicado());
         var notifs = new FakeNotificacionRepository();
         var uow = new FakeUnitOfWork();
-        var sut = new CancelarEnvioService(envios, notifs, uow, TimeProvider.System);
+        var notifier = new FakeNotificacionNotifier();
+        var sut = new CancelarEnvioService(envios, notifs, uow, notifier, TimeProvider.System);
 
         var r = await sut.CancelarAsync(10);
 
@@ -34,13 +35,14 @@ public class CancelarEnvioServiceTests
         Assert.Equal("P001", n.CodigoProveedor);
         Assert.Equal(10, n.IdEnvio);
         Assert.False(n.Leida);
-        Assert.Equal(1, uow.Guardados); // estado + notificación en una transacción
+        Assert.Equal(1, uow.Guardados);        // estado + notificación en una transacción
+        Assert.Equal("P001", Assert.Single(notifier.Notificados)); // aviso en tiempo real publicado
     }
 
     [Fact]
     public async Task Cancelar_envio_inexistente_devuelve_error()
     {
-        var sut = new CancelarEnvioService(new FakeEnvioRepository(), new FakeNotificacionRepository(), new FakeUnitOfWork(), TimeProvider.System);
+        var sut = new CancelarEnvioService(new FakeEnvioRepository(), new FakeNotificacionRepository(), new FakeUnitOfWork(), new FakeNotificacionNotifier(), TimeProvider.System);
 
         var r = await sut.CancelarAsync(99);
 
@@ -56,12 +58,14 @@ public class CancelarEnvioServiceTests
         envios.Envios.Add(envio);
         var notifs = new FakeNotificacionRepository();
         var uow = new FakeUnitOfWork();
-        var sut = new CancelarEnvioService(envios, notifs, uow, TimeProvider.System);
+        var notifier = new FakeNotificacionNotifier();
+        var sut = new CancelarEnvioService(envios, notifs, uow, notifier, TimeProvider.System);
 
         var r = await sut.CancelarAsync(10);
 
         Assert.False(r.Exito);
         Assert.Empty(notifs.Items);
         Assert.Equal(0, uow.Guardados);
+        Assert.Empty(notifier.Notificados);
     }
 }

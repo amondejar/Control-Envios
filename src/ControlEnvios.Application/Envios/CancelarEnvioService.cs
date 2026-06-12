@@ -1,4 +1,5 @@
 using ControlEnvios.Application.Abstractions.Persistence;
+using ControlEnvios.Application.Abstractions.RealTime;
 using ControlEnvios.Application.Common;
 using ControlEnvios.Domain.Entities;
 using ControlEnvios.Domain.Enums;
@@ -13,6 +14,7 @@ public sealed class CancelarEnvioService(
     IEnvioRepository envioRepository,
     INotificacionRepository notificacionRepository,
     IUnitOfWork unitOfWork,
+    INotificacionNotifier notifier,
     TimeProvider timeProvider) : ICancelarEnvioService
 {
     public async Task<ResultadoOperacion> CancelarAsync(int idEnvio, CancellationToken ct = default)
@@ -44,6 +46,10 @@ public sealed class CancelarEnvioService(
         }, ct);
 
         await unitOfWork.SaveChangesAsync(ct);
+
+        // Aviso en tiempo real al proveedor conectado (refresca su campana sin recargar).
+        await notifier.NotificarAsync(envio.CodigoProveedor, ct);
+
         return ResultadoOperacion.Ok("Envío cancelado y proveedor notificado.");
     }
 }
