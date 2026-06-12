@@ -133,10 +133,13 @@ ControlEnvios.sln  (nuevo, .NET 8)
 - [ ] *(Requiere BD)* Mapear el resto de procedimientos almacenados (`ENVIOPESADA`, `LISTAENVIOSIDPROVEEDOR`, `LISTAENVIOSFECHAPROVEEDOR`, `CANCELAENVIO`, `CANCELAENVIOEMAIL`, `TODOSLOSENVIOSPROVEE`). `KILOS_SEMANA_PROVEEDOR` ya esbozado con `SqlQueryRaw`.
 - [ ] *(Requiere BD)* Pruebas de integración contra una BD de pruebas (no producción).
 
-### Fase 4 — Lógica de negocio (capa Application)
-- [ ] Extraer la lógica de los controladores a servicios testeables: `EnvioService`, `CupoService`, `ProveedorService`, `EmailService`.
-- [ ] Pruebas unitarias del cálculo de cupos y manejo de fechas (corrigiendo edge cases de semana ISO).
-- [ ] Portar `SmptEmailSendProveedor` a un `EmailService` con `MailKit` (o `System.Net.Mail`) configurable.
+### Fase 4 — Lógica de negocio (capa Application) ✅ COMPLETADA
+- [x] Servicios testeables: `CupoService` (regla de cupos), `AuthService` (login por rol), `EnvioService` (alta/edición/borrado con validación de cupo). `EmailService` en Infraestructura.
+- [x] **Bugs corregidos vs. legacy**: cálculo de semana lunes–domingo correcto (`SemanaLaboral`, antes fallaba en domingo); sin `NullReferenceException` con cupo nulo; sin duplicación de los dos bloques de `Create`; cookie ya no se emite antes de validar (responsabilidad de la capa Web).
+- [x] **32 tests** (21 unitarios + 11 integración) con *fakes* propios, sin librería de mocking ni BD. Cubren ENV-01..04, LOGIN-01..04 y la regresión del domingo.
+- [x] `IPasswordHasher` con implementación de transición `LegacyPlaintextPasswordHasher` (texto plano; se sustituye en Fase 6).
+- [x] `SmptEmailSendProveedor` portado a `SmtpEmailService` con **MailKit** y `SmtpOptions` por configuración (sin credenciales hardcodeadas).
+- [x] DI completa: servicios de Application + repos/DbContext/email/hasher en Infraestructura. App arranca (HTTP 200) con el grafo validado.
 
 ### Fase 5 — UI renovada (Blazor + MudBlazor), módulo a módulo
 - [ ] Layout principal limpio: cabecera con logo de empresa, navegación lateral moderna, footer.
