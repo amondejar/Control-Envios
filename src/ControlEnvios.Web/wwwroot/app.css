@@ -43,7 +43,7 @@ h1:focus {
 }
 
     .blazor-error-boundary::after {
-        content: "An error has occurred."
+        content: "Se ha producido un error."
     }
 
 .darker-border-checkbox.form-check-input {
@@ -57,4 +57,53 @@ h1:focus {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
+}
+
+/* ===================== Marca Derivados Cítricos — degradados modernos ===================== */
+
+/* Cabecera con degradado cítrico (verde → naranja) */
+.mud-appbar {
+    background: linear-gradient(90deg, #1B5E20 0%, #2E7D32 55%, #F57C00 145%) !important;
+    box-shadow: 0 2px 14px rgba(27, 94, 32, 0.28) !important;
+}
+
+/* Fondo general suave */
+.mud-main-content {
+    background:
+        radial-gradient(1200px 400px at 100% -10%, rgba(255, 179, 0, 0.10), transparent 60%),
+        radial-gradient(1000px 400px at -10% 0%, rgba(46, 125, 50, 0.10), transparent 55%);
+}
+
+/* Botón primario con degradado */
+.mud-button-filled-primary {
+    background: linear-gradient(95deg, #2E7D32 0%, #43A047 60%, #F57C00 180%) !important;
+    transition: filter .15s ease, box-shadow .15s ease;
+}
+.mud-button-filled-primary:hover {
+    filter: brightness(1.06);
+    box-shadow: 0 6px 18px rgba(46, 125, 50, 0.38) !important;
+}
+
+/* Tarjetas con elevación animada y franja superior de marca */
+.mud-card {
+    border-top: 3px solid #2E7D32;
+    transition: transform .15s ease, box-shadow .18s ease;
+}
+.mud-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.14) !important;
+}
+
+/* Pie con degradado tenue y logos en escala de grises que se colorean al pasar */
+.app-footer {
+    background: linear-gradient(90deg, rgba(46, 125, 50, 0.07), rgba(245, 124, 0, 0.07));
+}
+.app-footer img {
+    filter: grayscale(35%);
+    opacity: 0.9;
+    transition: filter .2s ease, opacity .2s ease;
+}
+.app-footer img:hover {
+    filter: none;
+    opacity: 1;
 }

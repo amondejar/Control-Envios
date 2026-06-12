@@ -18,10 +18,11 @@ coordinación con el cliente. Corrige los hallazgos de
 ## 2. Autenticación — cookie de ASP.NET Core
 - **Antes:** Forms Authentication + estado manual en `Session`; además la **cookie se emitía antes de
   validar** las credenciales.
-- **Ahora:** esquema de cookie de ASP.NET Core. El login es una página **SSR estática** que valida con
-  `AuthService` y solo entonces emite la cookie con `HttpContext.SignInAsync` (claims: nombre, rol).
-  Logout vía `SignOutAsync`. La autorización por rol se aplica con `[Authorize(Roles=…)]` y
-  `AuthorizeRouteView`; los anónimos se redirigen a `/login`.
+- **Ahora:** esquema de cookie de ASP.NET Core. La UI usa **interactividad Server global** (requisito de
+  MudBlazor), por lo que el login es un **formulario nativo** que postea al endpoint `POST /account/login`:
+  valida con `AuthService` y solo entonces emite la cookie con `HttpContext.SignInAsync` (claims: nombre,
+  rol). Logout en `GET /account/logout` con `SignOutAsync`. La autorización por rol se aplica con
+  `[Authorize(Roles=…)]` y `AuthorizeRouteView`; los anónimos se redirigen a `/login`.
 - **Opciones de cookie:** `HttpOnly`, `SameSite=Lax`, `SecurePolicy=SameAsRequest`, expiración 8 h con
   expiración deslizante.
 - El estado de auth fluye a los componentes interactivos vía `CookieAuthenticationStateProvider`

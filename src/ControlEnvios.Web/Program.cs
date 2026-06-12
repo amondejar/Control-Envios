@@ -1,7 +1,10 @@
+using System.Security.Claims;
 using ControlEnvios.Application;
+using ControlEnvios.Application.Autenticacion;
 using ControlEnvios.Infrastructure;
 using ControlEnvios.Web.Authentication;
 using ControlEnvios.Web.Components;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor.Services;
@@ -70,4 +73,47 @@ app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
+// --- Endpoints de autenticación (firman/borran la cookie; la UI es interactiva global) ---
+app.MapPost("/account/login", async (HttpContext http, IAuthService auth) =>
+{
+    var form = await http.Request.ReadFormAsync();
+    var usuario = form["usuario"].ToString();
+    var password = form["password"].ToString();
+    var returnUrl = UrlLocalSeguro(form["returnUrl"].ToString());
+
+    try
+    {
+        var r = await auth.AutenticarAsync(usuario, password);
+        if (!r.Exito)
+        {
+            return Results.Redirect($"/login?error=1&returnUrl={Uri.EscapeDataString(returnUrl)}");
+        }
+
+        var claims = new[]
+        {
+            new Claim(ClaimTypes.Name, r.Identificador!),
+            new Claim(ClaimTypes.GivenName, r.Nombre ?? r.Identificador!),
+            new Claim(ClaimTypes.Role, r.Rol!.Value.ToString()),
+        };
+        var identidad = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        await http.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identidad));
+        return Results.Redirect(returnUrl);
+    }
+    catch (Exception)
+    {
+        return Results.Redirect("/login?error=2");
+    }
+}).DisableAntiforgery();
+
+// GET por simplicidad desde el menú interactivo (CSRF de logout es de severidad baja; ver FASE6-SEGURIDAD).
+app.MapGet("/account/logout", async (HttpContext http) =>
+{
+    await http.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+    return Results.Redirect("/login");
+});
+
 app.Run();
+
+// Evita open-redirect: solo rutas locales.
+static string UrlLocalSeguro(string? url) =>
+    !string.IsNullOrEmpty(url) && url.StartsWith('/') && !url.StartsWith("//") ? url : "/";
