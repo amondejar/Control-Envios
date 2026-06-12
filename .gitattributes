@@ -1,0 +1,23 @@
+# Normalización de finales de línea (CI corre en Linux).
+* text=auto
+
+*.cs       text diff=csharp
+*.razor    text
+*.csproj   text
+*.slnx     text
+*.json     text
+*.md       text
+*.yml      text
+*.css      text
+*.js       text
+
+# Binarios.
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.otf binary

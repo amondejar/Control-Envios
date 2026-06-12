@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ControlEnvios.Application/ControlEnvios.Application.csproj" />
+    <Project Path="src/ControlEnvios.Domain/ControlEnvios.Domain.csproj" />
+    <Project Path="src/ControlEnvios.Infrastructure/ControlEnvios.Infrastructure.csproj" />
+    <Project Path="src/ControlEnvios.Web/ControlEnvios.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ControlEnvios.IntegrationTests/ControlEnvios.IntegrationTests.csproj" />
+    <Project Path="tests/ControlEnvios.UnitTests/ControlEnvios.UnitTests.csproj" />
+  </Folder>
+</Solution>

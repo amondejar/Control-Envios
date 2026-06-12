@@ -1,9 +1,13 @@
 # Plan de Migración — ControlEnvios
 
 **Origen:** ASP.NET MVC 5 · .NET Framework 4.8 · EF6 (EDMX) · Bootstrap 3 + jQuery + Ext.NET
-**Destino:** **Blazor Web App (.NET 8 LTS, interactividad Server)** · **EF Core 8 (Database-First)** · UI renovada con MudBlazor + identidad visual de la empresa
+**Destino:** **Blazor Web App (.NET 10 LTS, interactividad Server)** · **EF Core (Database-First)** · UI renovada con MudBlazor + identidad visual de la empresa
 **Rama de trabajo:** `migracion-blazor-net8` (todo el trabajo de migración vive aquí; `main` queda intacta)
-**Estado:** Plan aprobado para revisión — *aún no se escribe código de aplicación*
+**Estado:** Fases 0–2 completadas. En curso la Fase 3.
+
+> **Nota de versión:** el plan se redactó para .NET 8 LTS, pero el equipo de desarrollo solo dispone del
+> SDK de **.NET 10** (también LTS, más reciente). El andamiaje se ha generado contra **net10.0**; el enfoque
+> (Blazor Server + EF Core database-first) no cambia.
 
 ---
 
@@ -109,11 +113,12 @@ ControlEnvios.sln  (nuevo, .NET 8)
 - [x] Catálogo de procedimientos almacenados con su contrato y discrepancias detectadas.
 - [x] Casos de prueba de aceptación por módulo (LOGIN/ENV/GES/PRO).
 
-### Fase 2 — Andamiaje del proyecto destino
-- [ ] Crear la solución .NET 8 con la estructura `src/` + `tests/` (Domain, Application, Infrastructure, Web).
-- [ ] Configurar DI, logging (Serilog), `appsettings` y secretos.
-- [ ] Integrar MudBlazor con un tema base con los colores/logo de la empresa.
-- [ ] CI mínimo: build + tests en cada push de la rama.
+### Fase 2 — Andamiaje del proyecto destino ✅ COMPLETADA
+- [x] Solución `ControlEnvios.Modern.slnx` (.NET 10) con `src/` + `tests/` (Domain, Application, Infrastructure, Web, UnitTests, IntegrationTests) y referencias entre capas.
+- [x] DI por capas (`AddApplication`/`AddInfrastructure`), logging Serilog, `appsettings` con secretos en blanco + User Secrets inicializado.
+- [x] MudBlazor integrado (providers, layout con AppBar/Drawer, `CompanyTheme` con paleta de empresa). App arranca y sirve HTTP 200.
+- [x] CI mínimo en `.github/workflows/ci.yml` (restore + build + test en push/PR de la rama).
+- [x] Verificado: `dotnet build` y `dotnet test` correctos; smoke-test de arranque OK.
 
 ### Fase 3 — Capa de datos (EF Core)
 - [ ] Scaffold del `DbContext` y entidades desde la BD `Bascula` (Database-First).

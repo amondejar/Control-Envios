@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\ControlEnvios.Application\ControlEnvios.Application.csproj" />
+    <ProjectReference Include="..\ControlEnvios.Infrastructure\ControlEnvios.Infrastructure.csproj" />
+    <ProjectReference Include="..\ControlEnvios.Domain\ControlEnvios.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MudBlazor" Version="9.5.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+    <UserSecretsId>0fea8ca4-9d30-43d0-9600-0b12245d9bbe</UserSecretsId>
+  </PropertyGroup>
+
+</Project>
