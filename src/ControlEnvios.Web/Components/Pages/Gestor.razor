@@ -1,0 +1,85 @@
+@page "/gestor"
+@attribute [Authorize(Roles = "Gestor")]
+@using ControlEnvios.Application.Abstractions.Persistence
+@using ControlEnvios.Domain.Entities
+@inject IProveedorRepository ProveedorRepo
+@inject IArticuloRepository ArticuloRepo
+@inject ISnackbar Snackbar
+
+<PageTitle>Gestión de envíos</PageTitle>
+
+<MudText Typo="Typo.h4" GutterBottom="true">Gestión de envíos</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudGrid>
+        <MudItem xs="12" sm="6" md="3">
+            <MudDatePicker @bind-Date="_fechaInicio" Label="Fecha inicio" Variant="Variant.Outlined" />
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudDatePicker @bind-Date="_fechaFin" Label="Fecha fin" Variant="Variant.Outlined" />
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudSelect T="string" @bind-Value="_proveedor" Label="Proveedor" Variant="Variant.Outlined" Clearable="true">
+                @foreach (var p in _proveedores)
+                {
+                    <MudSelectItem Value="@p.Codigo">@p.Nombre</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudSelect T="string" @bind-Value="_articulo" Label="Artículo" Variant="Variant.Outlined" Clearable="true">
+                @foreach (var a in _articulos)
+                {
+                    <MudSelectItem Value="@a.Codigo">@a.Descripcion</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+    </MudGrid>
+    <div class="d-flex justify-end mt-3">
+        <MudButton StartIcon="@Icons.Material.Filled.Search" Variant="Variant.Filled" Color="Color.Primary"
+                   OnClick="Buscar">Buscar</MudButton>
+    </div>
+</MudPaper>
+
+<MudDataGrid T="Envio" Items="_resultados" Dense="true" Hover="true" Elevation="2" Filterable="true">
+    <Columns>
+        <PropertyColumn Property="x => x.FechaEnvio" Title="Fecha" />
+        <PropertyColumn Property="x => x.CodigoProveedor" Title="Proveedor" />
+        <PropertyColumn Property="x => x.CodigoArticulo" Title="Artículo" />
+        <PropertyColumn Property="x => x.Matricula" Title="Matrícula" />
+        <PropertyColumn Property="x => x.KilosEnviados" Title="Kilos" Format="N0" />
+    </Columns>
+    <NoRecordsContent>
+        <MudText Class="pa-4 mud-text-secondary">Sin resultados para los filtros seleccionados.</MudText>
+    </NoRecordsContent>
+</MudDataGrid>
+
+@code {
+    private DateTime? _fechaInicio = DateTime.Today.AddDays(-7);
+    private DateTime? _fechaFin = DateTime.Today;
+    private string? _proveedor;
+    private string? _articulo;
+
+    private IReadOnlyList<Proveedor> _proveedores = [];
+    private IReadOnlyList<Articulo> _articulos = [];
+    private IReadOnlyList<Envio> _resultados = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _proveedores = await ProveedorRepo.GetSeleccionablesAsync();
+            _articulos = await ArticuloRepo.GetActivosWebAsync();
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("No hay conexión con la base de datos configurada.", Severity.Warning);
+        }
+    }
+
+    private void Buscar()
+    {
+        // TODO Fase 3 (con BD): consulta por fechas vía SP LISTAENVIOSFECHAPROVEEDOR (servicio de consulta).
+        Snackbar.Add("La consulta por fechas se habilitará al conectar la base de datos.", Severity.Info);
+    }
+}

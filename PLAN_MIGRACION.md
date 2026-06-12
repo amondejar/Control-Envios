@@ -141,15 +141,16 @@ ControlEnvios.sln  (nuevo, .NET 8)
 - [x] `SmptEmailSendProveedor` portado a `SmtpEmailService` con **MailKit** y `SmtpOptions` por configuración (sin credenciales hardcodeadas).
 - [x] DI completa: servicios de Application + repos/DbContext/email/hasher en Infraestructura. App arranca (HTTP 200) con el grafo validado.
 
-### Fase 5 — UI renovada (Blazor + MudBlazor), módulo a módulo
-- [ ] Layout principal limpio: cabecera con logo de empresa, navegación lateral moderna, footer.
-- [ ] Migrar activos de marca (`images/`, `Iconos/`, `favicon`) a `wwwroot/`.
-- [ ] **Login** → página Blazor con validación.
-- [ ] **Envios** → DataGrid de MudBlazor (reemplaza jqGrid/DataTables), formulario crear/editar en diálogo, detalle.
-- [ ] **Gestor** → listados y filtros por fechas/proveedor.
-- [ ] **Producción** → equivalente al módulo actual.
-- [ ] Notificaciones con Snackbar de MudBlazor (reemplaza Toastr).
-- [ ] Diseño responsive y accesible.
+### Fase 5 — UI renovada (Blazor + MudBlazor), módulo a módulo ✅ COMPLETADA
+- [x] Layout autenticado limpio: `MudAppBar` con logo de empresa, `MudDrawer` con navegación por rol, menú de usuario con cierre de sesión, footer con logos corporativos, alternador claro/oscuro.
+- [x] Activos de marca migrados a `wwwroot/` (`images/`, `iconos/`, `favicon.ico`).
+- [x] **Login** → página Blazor (`LoginLayout` a pantalla completa con marca) con validación y `AuthService`; navegación por rol con `AuthorizeView`/`[Authorize(Roles=…)]`.
+- [x] **Envíos** → `MudDataGrid` (reemplaza jqGrid/DataTables) + diálogo crear/editar (`MudDialog` + `MudForm`) + borrado con confirmación, conectado a `EnvioService`.
+- [x] **Gestor** y **Producción** → shells funcionales con filtros (fechas/proveedor/artículo) y `MudDataGrid`; desplegables cableados a los repos. *(La consulta por fechas se activa con la BD: SP `LISTAENVIOSFECHAPROVEEDOR`.)*
+- [x] Notificaciones con `ISnackbar` (reemplaza Toastr). Diseño responsive (`MudGrid`, drawer responsive).
+- [x] Protección de rutas: anónimo → 302 a `/login`. Verificado por smoke-test.
+
+> **Diferido a Fase 6** (frontera limpia): el inicio de sesión por **cookie** (hoy el estado de auth vive en el circuito Blazor vía `CircuitAuthenticationStateProvider`; las páginas `[Authorize]` se protegen por challenge de cookie, así que serán plenamente navegables tras login cuando se implemente `SignInAsync` en Fase 6) y el **hashing** real de contraseñas.
 
 ### Fase 6 — Seguridad *(crítica, transversal)*
 - [ ] **Sacar la cadena de conexión** de la configuración versionada → User Secrets / variables de entorno.

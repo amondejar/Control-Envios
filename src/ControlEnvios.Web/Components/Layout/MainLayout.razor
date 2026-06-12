@@ -1,5 +1,7 @@
 @inherits LayoutComponentBase
 @using ControlEnvios.Web.Theming
+@inject CircuitAuthenticationStateProvider AuthState
+@inject NavigationManager Nav
 
 <MudThemeProvider Theme="CompanyTheme.Default" @bind-IsDarkMode="_isDarkMode" />
 <MudPopoverProvider />
@@ -9,14 +11,24 @@
 <MudLayout>
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start"
-                       OnClick="@ToggleDrawer" />
-        <MudText Typo="Typo.h6" Class="ml-2">Control de Envíos</MudText>
+                       OnClick="@(() => _drawerOpen = !_drawerOpen)" />
+        <MudImage Src="images/logo.jpg" Height="36" Class="ml-2 mr-3 rounded" />
+        <MudText Typo="Typo.h6" Class="d-none d-sm-flex">Control de Envíos</MudText>
         <MudSpacer />
         <MudIconButton Icon="@(_isDarkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)"
                        Color="Color.Inherit" OnClick="@(() => _isDarkMode = !_isDarkMode)" />
+        <AuthorizeView>
+            <MudMenu Icon="@Icons.Material.Filled.AccountCircle" Color="Color.Inherit" AnchorOrigin="Origin.BottomRight">
+                <MudText Typo="Typo.body2" Class="px-4 py-2">
+                    @context.User.Identity?.Name (@context.User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value)
+                </MudText>
+                <MudDivider />
+                <MudMenuItem Icon="@Icons.Material.Filled.Logout" OnClick="CerrarSesion">Cerrar sesión</MudMenuItem>
+            </MudMenu>
+        </AuthorizeView>
     </MudAppBar>
 
-    <MudDrawer @bind-Open="_drawerOpen" Elevation="2" ClipMode="DrawerClipMode.Always">
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="2" ClipMode="DrawerClipMode.Always" Variant="@DrawerVariant.Responsive">
         <NavMenu />
     </MudDrawer>
 
@@ -24,6 +36,12 @@
         <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="my-6">
             @Body
         </MudContainer>
+        <footer class="app-footer">
+            <MudImage Src="images/logo_footer.png" Height="28" Class="mx-2" />
+            <MudImage Src="images/logo_quick_footer.png" Height="28" Class="mx-2" />
+            <MudImage Src="images/logo_solimon_footer.png" Height="28" Class="mx-2" />
+            <MudText Typo="Typo.caption" Class="mud-text-secondary ml-3">© Derivados Cítricos</MudText>
+        </footer>
     </MudMainContent>
 </MudLayout>
 
@@ -37,5 +55,9 @@
     private bool _drawerOpen = true;
     private bool _isDarkMode;
 
-    private void ToggleDrawer() => _drawerOpen = !_drawerOpen;
+    private void CerrarSesion()
+    {
+        AuthState.CerrarSesion();
+        Nav.NavigateTo("/login");
+    }
 }

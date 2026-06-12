@@ -1,0 +1,8 @@
+.login-bg {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 60%, #F9A825 160%);
+}

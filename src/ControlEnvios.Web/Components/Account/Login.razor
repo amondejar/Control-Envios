@@ -1,0 +1,79 @@
+@page "/login"
+@layout LoginLayout
+@using System.ComponentModel.DataAnnotations
+@using ControlEnvios.Application.Autenticacion
+@inject IAuthService AuthService
+@inject CircuitAuthenticationStateProvider AuthState
+@inject NavigationManager Nav
+@inject ISnackbar Snackbar
+
+<PageTitle>Acceso — Control de Envíos</PageTitle>
+
+<MudPaper Elevation="6" Class="pa-8" Style="width:100%;max-width:420px;border-radius:16px;">
+    <div class="d-flex justify-center mb-2">
+        <MudImage Src="images/logo.jpg" Alt="Derivados Cítricos" Height="64" Elevation="0" />
+    </div>
+    <MudText Typo="Typo.h5" Align="Align.Center" Class="mb-1">Control de Envíos</MudText>
+    <MudText Typo="Typo.body2" Align="Align.Center" Class="mud-text-secondary mb-6">Acceso de proveedores y gestión</MudText>
+
+    <EditForm Model="_model" OnValidSubmit="Entrar">
+        <DataAnnotationsValidator />
+        <MudTextField @bind-Value="_model.Usuario" For="@(() => _model.Usuario)"
+                      Label="Usuario / Cód. proveedor" Variant="Variant.Outlined"
+                      Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Person" Class="mb-4" />
+        <MudTextField @bind-Value="_model.Password" For="@(() => _model.Password)"
+                      Label="Contraseña" InputType="InputType.Password" Variant="Variant.Outlined"
+                      Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Lock" Class="mb-6" />
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary"
+                   FullWidth="true" Size="Size.Large" Disabled="_cargando">
+            @if (_cargando)
+            {
+                <MudProgressCircular Class="ms-n1 me-2" Size="Size.Small" Indeterminate="true" />
+                <span>Accediendo…</span>
+            }
+            else
+            {
+                <span>Entrar</span>
+            }
+        </MudButton>
+    </EditForm>
+</MudPaper>
+
+@code {
+    private readonly LoginModel _model = new();
+    private bool _cargando;
+
+    private async Task Entrar()
+    {
+        _cargando = true;
+        try
+        {
+            var resultado = await AuthService.AutenticarAsync(_model.Usuario, _model.Password);
+            if (resultado.Exito)
+            {
+                AuthState.IniciarSesion(resultado);
+                Nav.NavigateTo("/");
+                return;
+            }
+            Snackbar.Add(resultado.Motivo ?? ResultadoLogin.MensajeCredencialesInvalidas, Severity.Error);
+        }
+        catch (Exception)
+        {
+            // Sin BD configurada, la consulta falla. Mensaje neutro (sin filtrar detalles internos).
+            Snackbar.Add("No se pudo validar el acceso. Inténtelo de nuevo más tarde.", Severity.Error);
+        }
+        finally
+        {
+            _cargando = false;
+        }
+    }
+
+    public sealed class LoginModel
+    {
+        [Required(ErrorMessage = "Introduzca el usuario.")]
+        public string Usuario { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Introduzca la contraseña.")]
+        public string Password { get; set; } = string.Empty;
+    }
+}

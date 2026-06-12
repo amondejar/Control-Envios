@@ -1,13 +1,59 @@
 @page "/"
+@attribute [Authorize]
 
-<PageTitle>Control de Envíos</PageTitle>
+<PageTitle>Inicio — Control de Envíos</PageTitle>
 
-<MudPaper Class="pa-8" Elevation="0">
-    <MudText Typo="Typo.h4" GutterBottom="true">Control de Envíos</MudText>
-    <MudText Typo="Typo.body1" Class="mb-4">
-        Migración a .NET 10 + Blazor en curso. Andamiaje base operativo (Fase 2).
+<MudText Typo="Typo.h4" GutterBottom="true">Panel principal</MudText>
+
+<AuthorizeView Context="auth">
+    <MudText Typo="Typo.body1" Class="mb-6">
+        Bienvenido/a, <b>@(auth.User.FindFirst(System.Security.Claims.ClaimTypes.GivenName)?.Value ?? auth.User.Identity?.Name)</b>.
     </MudText>
-    <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">
-        Los módulos (Login, Envíos, Gestor, Producción) se incorporan en las Fases 4–5.
-    </MudAlert>
-</MudPaper>
+</AuthorizeView>
+
+<MudGrid>
+    <AuthorizeView Roles="Proveedor" Context="prov">
+        <MudItem xs="12" sm="6" md="4">
+            <MudCard Elevation="2">
+                <MudCardContent>
+                    <MudIcon Icon="@Icons.Material.Filled.LocalShipping" Color="Color.Primary" Size="Size.Large" />
+                    <MudText Typo="Typo.h6" Class="mt-2">Mis envíos</MudText>
+                    <MudText Typo="Typo.body2" Class="mud-text-secondary">Crear y consultar sus envíos de mercancía.</MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Href="envios" Variant="Variant.Text" Color="Color.Primary">Ir</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </AuthorizeView>
+
+    <AuthorizeView Roles="Gestor" Context="gest">
+        <MudItem xs="12" sm="6" md="4">
+            <MudCard Elevation="2">
+                <MudCardContent>
+                    <MudIcon Icon="@Icons.Material.Filled.ManageSearch" Color="Color.Primary" Size="Size.Large" />
+                    <MudText Typo="Typo.h6" Class="mt-2">Gestión de envíos</MudText>
+                    <MudText Typo="Typo.body2" Class="mud-text-secondary">Consultar y cancelar envíos por fechas y proveedor.</MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Href="gestor" Variant="Variant.Text" Color="Color.Primary">Ir</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </AuthorizeView>
+
+    <AuthorizeView Roles="Produccion" Context="prod">
+        <MudItem xs="12" sm="6" md="4">
+            <MudCard Elevation="2">
+                <MudCardContent>
+                    <MudIcon Icon="@Icons.Material.Filled.Factory" Color="Color.Primary" Size="Size.Large" />
+                    <MudText Typo="Typo.h6" Class="mt-2">Producción</MudText>
+                    <MudText Typo="Typo.body2" Class="mud-text-secondary">Consultar los envíos por fechas.</MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Href="produccion" Variant="Variant.Text" Color="Color.Primary">Ir</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </AuthorizeView>
+</MudGrid>

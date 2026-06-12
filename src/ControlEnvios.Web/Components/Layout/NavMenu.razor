@@ -1,5 +1,18 @@
-@* Navegación principal. Los enlaces por rol (Envíos, Gestor, Producción) se añaden en la Fase 5. *@
+@* Navegación principal por rol. *@
 <MudNavMenu>
-    <MudText Typo="Typo.subtitle2" Class="px-4 py-3">Derivados Cítricos</MudText>
+    <MudText Typo="Typo.subtitle2" Class="px-4 py-3 mud-text-secondary">DERIVADOS CÍTRICOS</MudText>
+
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Inicio</MudNavLink>
+
+    <AuthorizeView Roles="Proveedor">
+        <MudNavLink Href="envios" Icon="@Icons.Material.Filled.LocalShipping">Mis envíos</MudNavLink>
+    </AuthorizeView>
+
+    <AuthorizeView Roles="Gestor">
+        <MudNavLink Href="gestor" Icon="@Icons.Material.Filled.ManageSearch">Gestión de envíos</MudNavLink>
+    </AuthorizeView>
+
+    <AuthorizeView Roles="Produccion">
+        <MudNavLink Href="produccion" Icon="@Icons.Material.Filled.Factory">Producción</MudNavLink>
+    </AuthorizeView>
 </MudNavMenu>

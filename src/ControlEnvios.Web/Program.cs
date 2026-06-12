@@ -1,6 +1,9 @@
 using ControlEnvios.Application;
 using ControlEnvios.Infrastructure;
+using ControlEnvios.Web.Authentication;
 using ControlEnvios.Web.Components;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor.Services;
 using Serilog;
 
@@ -24,6 +27,22 @@ builder.Services.AddMudServices();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+// Autenticación / autorización.
+// Esquema de cookie con redirección a /login: satisface la autorización del endpoint SSR.
+// El estado interactivo lo gobierna el provider del circuito; el inicio de sesión por cookie
+// (persistencia entre recargas) se completa en la Fase 6.
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/login";
+        options.AccessDeniedPath = "/login";
+    });
+builder.Services.AddAuthorization();
+builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddScoped<CircuitAuthenticationStateProvider>();
+builder.Services.AddScoped<AuthenticationStateProvider>(
+    sp => sp.GetRequiredService<CircuitAuthenticationStateProvider>());
+
 var app = builder.Build();
 
 app.UseSerilogRequestLogging();
@@ -38,6 +57,8 @@ if (!app.Environment.IsDevelopment())
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseAntiforgery();
 
 app.MapStaticAssets();

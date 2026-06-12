@@ -1,0 +1,168 @@
+@page "/envios"
+@attribute [Authorize(Roles = "Proveedor")]
+@using ControlEnvios.Application.Abstractions.Persistence
+@using ControlEnvios.Application.Envios
+@using ControlEnvios.Domain.Entities
+@using ControlEnvios.Domain.Enums
+@inject IEnvioService EnvioService
+@inject IArticuloRepository ArticuloRepo
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+@inject AuthenticationStateProvider AuthProvider
+
+<PageTitle>Mis envíos</PageTitle>
+
+<div class="d-flex align-center mb-4">
+    <MudText Typo="Typo.h4">Mis envíos</MudText>
+    <MudSpacer />
+    <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary"
+               OnClick="NuevoEnvio">Nuevo envío</MudButton>
+</div>
+
+<MudDataGrid T="Envio" Items="_envios" Loading="_cargando" Dense="true" Hover="true" Elevation="2"
+             Filterable="true" SortMode="SortMode.Multiple">
+    <Columns>
+        <PropertyColumn Property="x => x.FechaEnvio" Title="Fecha" />
+        <TemplateColumn Title="Hora">
+            <CellTemplate>@(context.Item.HoraEnvio?.ToString("HH:mm") ?? "—")</CellTemplate>
+        </TemplateColumn>
+        <PropertyColumn Property="x => x.CodigoArticulo" Title="Artículo" />
+        <PropertyColumn Property="x => x.Matricula" Title="Matrícula" />
+        <PropertyColumn Property="x => x.KilosEnviados" Title="Kilos" Format="N0" />
+        <TemplateColumn Title="Estado">
+            <CellTemplate>
+                <MudChip T="string" Size="Size.Small"
+                         Color="@(context.Item.Estado == EstadoEnvio.Cancelado ? Color.Error : Color.Success)">
+                    @context.Item.Estado
+                </MudChip>
+            </CellTemplate>
+        </TemplateColumn>
+        <PropertyColumn Property="x => x.Observaciones" Title="Observaciones" />
+        <TemplateColumn Title="Acciones" Sortable="false" Filterable="false">
+            <CellTemplate>
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Primary"
+                               OnClick="@(() => Editar(context.Item))" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                               OnClick="@(() => Eliminar(context.Item))" />
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <NoRecordsContent>
+        <MudText Class="pa-4 mud-text-secondary">No hay envíos desde hoy.</MudText>
+    </NoRecordsContent>
+</MudDataGrid>
+
+@code {
+    private IReadOnlyList<Envio> _envios = [];
+    private IReadOnlyList<Articulo> _articulos = [];
+    private bool _cargando = true;
+    private string? _codProveedor;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthProvider.GetAuthenticationStateAsync();
+        _codProveedor = state.User.Identity?.Name;
+        await CargarEnviosAsync();
+        await CargarArticulosAsync();
+    }
+
+    private async Task CargarEnviosAsync()
+    {
+        _cargando = true;
+        try
+        {
+            _envios = await EnvioService.ObtenerDesdeHoyAsync();
+        }
+        catch (Exception)
+        {
+            _envios = [];
+            Snackbar.Add("No hay conexión con la base de datos configurada.", Severity.Warning);
+        }
+        finally
+        {
+            _cargando = false;
+        }
+    }
+
+    private async Task CargarArticulosAsync()
+    {
+        try { _articulos = await ArticuloRepo.GetActivosWebAsync(); }
+        catch (Exception) { _articulos = []; }
+    }
+
+    private Task NuevoEnvio() => MostrarDialogoAsync(new EnvioFormModel(), esEdicion: false);
+
+    private Task Editar(Envio e) => MostrarDialogoAsync(new EnvioFormModel
+    {
+        Id = e.Id,
+        CodigoArticulo = e.CodigoArticulo,
+        FechaEnvio = e.FechaEnvio.ToDateTime(TimeOnly.MinValue),
+        HoraEnvio = e.HoraEnvio?.ToString("HH:mm"),
+        KilosEnviados = e.KilosEnviados,
+        Matricula = e.Matricula,
+        Observaciones = e.Observaciones,
+    }, esEdicion: true);
+
+    private async Task MostrarDialogoAsync(EnvioFormModel model, bool esEdicion)
+    {
+        var parameters = new DialogParameters<EnvioDialog>
+        {
+            { x => x.Model, model },
+            { x => x.Articulos, _articulos },
+        };
+        var dialog = await DialogService.ShowAsync<EnvioDialog>(esEdicion ? "Editar envío" : "Nuevo envío", parameters);
+        var result = await dialog.Result;
+        if (result is null || result.Canceled || result.Data is not EnvioFormModel datos)
+        {
+            return;
+        }
+
+        if (!TimeOnly.TryParse(datos.HoraEnvio, out var hora))
+        {
+            Snackbar.Add("Hora no válida (HH:mm).", Severity.Error);
+            return;
+        }
+        var fecha = DateOnly.FromDateTime(datos.FechaEnvio!.Value);
+
+        try
+        {
+            var res = esEdicion
+                ? await EnvioService.EditarAsync(new EditarEnvioRequest(datos.Id, _codProveedor!, datos.CodigoArticulo!, fecha, hora, datos.KilosEnviados!.Value, datos.Matricula, datos.Observaciones))
+                : await EnvioService.CrearAsync(new CrearEnvioRequest(_codProveedor!, datos.CodigoArticulo!, fecha, hora, datos.KilosEnviados!.Value, datos.Matricula, datos.Observaciones));
+
+            Snackbar.Add(res.Mensaje ?? (res.Exito ? "Hecho." : "Error."), res.Exito ? Severity.Success : Severity.Error);
+            if (res.Exito)
+            {
+                await CargarEnviosAsync();
+            }
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("No se pudo guardar el envío (sin conexión a la base de datos).", Severity.Error);
+        }
+    }
+
+    private async Task Eliminar(Envio e)
+    {
+        var confirm = await DialogService.ShowMessageBoxAsync("Eliminar envío",
+            $"¿Eliminar el envío #{e.Id}?", yesText: "Eliminar", cancelText: "Cancelar");
+        if (confirm != true)
+        {
+            return;
+        }
+
+        try
+        {
+            var res = await EnvioService.EliminarAsync(e.Id);
+            Snackbar.Add(res.Mensaje ?? "", res.Exito ? Severity.Success : Severity.Error);
+            if (res.Exito)
+            {
+                await CargarEnviosAsync();
+            }
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("No se pudo eliminar (sin conexión a la base de datos).", Severity.Error);
+        }
+    }
+}
