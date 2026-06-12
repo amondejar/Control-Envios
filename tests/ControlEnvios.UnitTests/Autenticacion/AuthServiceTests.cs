@@ -8,7 +8,7 @@ namespace ControlEnvios.UnitTests.Autenticacion;
 public class AuthServiceTests
 {
     private static AuthService Sut(FakeProveedorRepository prov, FakeUsuarioRepository usu, FakePasswordHasher? hasher = null) =>
-        new(prov, usu, hasher ?? new FakePasswordHasher(), new FakeUnitOfWork());
+        new(prov, usu, hasher ?? new FakePasswordHasher(), new FakeUnitOfWork(), new AuthOptions());
 
     // LOGIN-01
     [Fact]
@@ -104,7 +104,8 @@ public class AuthServiceTests
             new FakeProveedorRepository { Proveedor = proveedor },
             new FakeUsuarioRepository(),
             new FakePasswordHasher { Rehash = true },
-            uow);
+            uow,
+            new AuthOptions { RehashPasswordsOnLogin = true });
 
         var r = await sut.AutenticarAsync("P001", "secret");
 
@@ -122,7 +123,8 @@ public class AuthServiceTests
             new FakeProveedorRepository { Proveedor = proveedor },
             new FakeUsuarioRepository(),
             new FakePasswordHasher { Rehash = false },
-            uow);
+            uow,
+            new AuthOptions { RehashPasswordsOnLogin = true });
 
         await sut.AutenticarAsync("P001", "secret");
 

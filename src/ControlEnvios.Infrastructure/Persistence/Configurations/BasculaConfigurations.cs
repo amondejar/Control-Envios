@@ -1,4 +1,5 @@
 using ControlEnvios.Domain.Entities;
+using ControlEnvios.Infrastructure.Persistence.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -35,9 +36,10 @@ public sealed class EnvioConfiguration : IEntityTypeConfiguration<Envio>
         b.Property(x => x.Id).HasColumnName("IDENVIO");
         b.Property(x => x.CodigoProveedor).HasColumnName("CODPROVEEDOR");
         b.Property(x => x.CodigoArticulo).HasColumnName("CODARTICULO");
-        b.Property(x => x.FechaEnvio).HasColumnName("FECHAENVIO");
-        // TODO Fase 3: HORAENVIO es datetime en el legacy (solo se usa la hora). Confirmar conversión TimeOnly?.
-        b.Property(x => x.HoraEnvio).HasColumnName("HORAENVIO");
+        b.Property(x => x.FechaEnvio).HasColumnName("FECHAENVIO")
+            .HasConversion(new DateOnlyToDateTimeConverter()).HasColumnType("datetime");
+        b.Property(x => x.HoraEnvio).HasColumnName("HORAENVIO")
+            .HasConversion(new TimeOnlyToDateTimeConverter()).HasColumnType("datetime");
         b.Property(x => x.KilosEnviados).HasColumnName("KILOSENVIADOS");
         b.Property(x => x.Estado).HasColumnName("ESTADO"); // enum -> int
         b.Property(x => x.Matricula).HasColumnName("MATRICULA");
@@ -69,8 +71,10 @@ public sealed class CupoProveedorConfiguration : IEntityTypeConfiguration<CupoPr
         b.Property(x => x.Id).HasColumnName("IDCUPOPROV");
         b.Property(x => x.CodigoProveedor).HasColumnName("CODPROVEE");
         b.Property(x => x.CodigoArticulo).HasColumnName("CODARTICULO");
-        b.Property(x => x.FechaInicio).HasColumnName("FECHAINICIOCUPO");
-        b.Property(x => x.FechaFin).HasColumnName("FEHAFINALCUPO"); // typo del esquema legacy (intencionado)
+        b.Property(x => x.FechaInicio).HasColumnName("FECHAINICIOCUPO")
+            .HasConversion(new DateOnlyToDateTimeConverter()).HasColumnType("datetime");
+        b.Property(x => x.FechaFin).HasColumnName("FEHAFINALCUPO") // typo del esquema legacy (intencionado)
+            .HasConversion(new DateOnlyToDateTimeConverter()).HasColumnType("datetime");
         b.Property(x => x.PorcentajeAsignado).HasColumnName("PORCENTAGEASIG");
         b.Property(x => x.Activo).HasColumnName("ACTIVACUPO");
     }
@@ -124,7 +128,7 @@ public sealed class EstadoMercanciaConfiguration : IEntityTypeConfiguration<Esta
         b.ToTable("ESTADOMERCANCIA");
         b.HasKey(x => x.Id);
         b.Property(x => x.Id).HasColumnName("ID");
-        b.Property(x => x.Nombre).HasColumnName("ESTADOMERCANCIA1");
+        b.Property(x => x.Nombre).HasColumnName("ESTADOMERCANCIA");
     }
 }
 

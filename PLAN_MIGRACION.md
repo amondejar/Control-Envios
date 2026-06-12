@@ -129,7 +129,7 @@ ControlEnvios.sln  (nuevo, .NET 8)
 - [x] **Interfaces de repositorio** en Application (`IProveedorRepository`, `IEnvioRepository`, `ICupoRepository`, etc.) + `IUnitOfWork`.
 - [x] **Implementaciones EF Core** de los repositorios + DI condicional (DbContext solo si hay cadena de conexión).
 - [x] Validación del modelo EF por tests (11 tests: construcción del modelo, mapeo de las 9 tablas, nombres de columna).
-- [ ] *(Requiere BD)* Validar el modelo contra la BD real (scaffold de contraste) y ajustar tipos/longitudes.
+- [x] **Validado contra la BD real** (`RealDbSmokeTests` consulta las 9 tablas): corregido `ESTADOMERCANCIA` (no `ESTADOMERCANCIA1`) y añadidos conversores `DateOnly`/`TimeOnly` ↔ `datetime`. Login de proveedor real verificado.
 - [ ] *(Requiere BD)* Mapear el resto de procedimientos almacenados (`ENVIOPESADA`, `LISTAENVIOSIDPROVEEDOR`, `LISTAENVIOSFECHAPROVEEDOR`, `CANCELAENVIO`, `CANCELAENVIOEMAIL`, `TODOSLOSENVIOSPROVEE`). `KILOS_SEMANA_PROVEEDOR` ya esbozado con `SqlQueryRaw`.
 - [ ] *(Requiere BD)* Pruebas de integración contra una BD de pruebas (no producción).
 
@@ -162,6 +162,7 @@ Detalle en [`docs/FASE6-SEGURIDAD.md`](docs/FASE6-SEGURIDAD.md).
 - [ ] *Endurecimiento recomendado* (ver doc): logout por POST, `SecurePolicy=Always`+HSTS en producción, lockout por intentos, autorización a nivel de dato.
 
 ### Fase 7 — Pruebas, paridad y corte
+- [ ] En el corte: ampliar `USUARIOS.PASSWORD`/`PROVEEDOR.PASSWORD` a `varchar(200)` y activar `Auth:RehashPasswordsOnLogin` (solo cuando el legacy ya no use la BD; ver `docs/FASE3-MAPEO-ENTIDADES.md`).
 - [ ] Validar paridad funcional contra los casos de la Fase 1 (con el cliente/usuario clave).
 - [ ] Pruebas de rendimiento y carga básicas.
 - [ ] Plan de despliegue (IIS con ASP.NET Core Hosting Bundle, o Kestrel tras proxy) y rollback.

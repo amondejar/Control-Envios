@@ -117,8 +117,25 @@ de Infraestructura/Aplicación. Contrato documentado en
 `CANCELAENVIO`, `CANCELAENVIOEMAIL`, `TODOSLOSENVIOSPROVEE`, `ALLCUPOSPROVEEDOR`,
 `RECUPERAENVIOSPROVEE`/`RECUPERAENVIOSPROVEE1`.
 
-## Pendiente al obtener acceso a la BD
-- Validar tipos/longitudes reales (`nvarchar(n)`, precisión de `decimal`).
-- Confirmar valores intermedios del catálogo `ESTADOMERCANCIA` y perfiles de `USUARIOS`.
-- Confirmar semántica de `TIENENETO` y si hay claves foráneas declaradas (el legacy no las navega).
-- Generar el `DbContext` definitivo (scaffold) y contrastarlo con estas entidades.
+## Validación contra la BD real ✅ (servidor `Bascula`)
+Verificado con `RealDbSmokeTests` (consulta de las 9 tablas) y por inspección de
+`INFORMATION_SCHEMA`. El esquema coincide con las entidades, salvo los ajustes siguientes ya aplicados:
+
+- **`ESTADOMERCANCIA`**: la columna se llama `ESTADOMERCANCIA` (no `ESTADOMERCANCIA1`, que era un
+  artefacto del EDMX legacy). Corregido en `EstadoMercanciaConfiguration`.
+- **Fechas `datetime`**: `FECHAENVIO`, `HORAENVIO`, `FECHAINICIOCUPO`, `FEHAFINALCUPO` son `datetime`
+  en la BD. Se aplican conversores (`DateOnlyToDateTimeConverter`, `TimeOnlyToDateTimeConverter`) para
+  conservar `DateOnly`/`TimeOnly` en el dominio sin tocar el esquema.
+- **`PESADABASCULA`** tiene una columna extra `BALSA3 (bit)` no usada por la web: EF la ignora (solo
+  selecciona las propiedades mapeadas). Sin acción.
+- Longitudes reales relevantes: `PROVEEDOR.PASSWORD varchar(100)`, **`USUARIOS.PASSWORD varchar(50)`**.
+
+> ⚠️ **Ancho de columnas para el hashing (Fase 7).** Un hash PBKDF2 ocupa ~83 caracteres.
+> `USUARIOS.PASSWORD varchar(50)` es **insuficiente**. Antes de activar el re-hash de contraseñas
+> (`Auth:RehashPasswordsOnLogin`) en el corte, hay que **ampliar** `USUARIOS.PASSWORD` (y por margen
+> `PROVEEDOR.PASSWORD`) a `varchar(200)`. Mientras la BD se comparta con el sistema legacy de báscula,
+> el re-hash permanece **desactivado** (rompería el login del legacy, que compara texto plano).
+
+## Pendiente (con BD)
+- Mapear los procedimientos almacenados restantes (Gestor/Producción: `LISTAENVIOSFECHAPROVEEDOR`, etc.).
+- Confirmar el catálogo completo de `ESTADOMERCANCIA` y la semántica de `TIENENETO`.

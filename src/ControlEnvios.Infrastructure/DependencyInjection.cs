@@ -1,6 +1,7 @@
 using ControlEnvios.Application.Abstractions.Email;
 using ControlEnvios.Application.Abstractions.Persistence;
 using ControlEnvios.Application.Abstractions.Security;
+using ControlEnvios.Application.Autenticacion;
 using ControlEnvios.Infrastructure.Email;
 using ControlEnvios.Infrastructure.Persistence;
 using ControlEnvios.Infrastructure.Persistence.Repositories;
@@ -20,6 +21,7 @@ public static class DependencyInjection
     {
         // Servicios sin dependencia de BD.
         services.AddScoped<IPasswordHasher, Pbkdf2PasswordHasher>();
+        services.AddSingleton(configuration.GetSection(AuthOptions.SectionName).Get<AuthOptions>() ?? new AuthOptions());
         services.Configure<SmtpOptions>(configuration.GetSection(SmtpOptions.SectionName));
         services.AddScoped<IEmailService, SmtpEmailService>();
 

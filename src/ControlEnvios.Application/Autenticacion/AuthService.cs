@@ -17,7 +17,8 @@ public sealed class AuthService(
     IProveedorRepository proveedorRepository,
     IUsuarioRepository usuarioRepository,
     IPasswordHasher passwordHasher,
-    IUnitOfWork unitOfWork) : IAuthService
+    IUnitOfWork unitOfWork,
+    AuthOptions options) : IAuthService
 {
     public async Task<ResultadoLogin> AutenticarAsync(string usuario, string password, CancellationToken ct = default)
     {
@@ -51,7 +52,8 @@ public sealed class AuthService(
 
     private async Task RehashearSiProcedeAsync(string password, string? almacenada, Action<string> asignar, CancellationToken ct)
     {
-        if (!passwordHasher.NecesitaRehash(almacenada))
+        // Desactivado por defecto mientras la BD se comparte con el sistema legacy (ver AuthOptions).
+        if (!options.RehashPasswordsOnLogin || !passwordHasher.NecesitaRehash(almacenada))
         {
             return;
         }
