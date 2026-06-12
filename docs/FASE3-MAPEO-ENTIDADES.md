@@ -136,6 +136,13 @@ Verificado con `RealDbSmokeTests` (consulta de las 9 tablas) y por inspección d
 > `PROVEEDOR.PASSWORD`) a `varchar(200)`. Mientras la BD se comparta con el sistema legacy de báscula,
 > el re-hash permanece **desactivado** (rompería el login del legacy, que compara texto plano).
 
+## Procedimientos almacenados implementados
+- **`LISTAENVIOSFECHAPROVEEDOR`** (consulta por fechas de Gestor/Producción): mapeado vía tipo sin clave
+  `EnvioConsultaResultado` + `FromSqlRaw` con `SqlParameter` de tipos explícitos (`datetime`, `varchar(10)`).
+  Notas: `Bascula3` es `bit` (no int); un interceptor fija `SET ARITHABORT ON` en cada conexión; el SP
+  degrada con rangos de fechas enormes (la UI usa rangos acotados).
+- `KILOS_SEMANA_PROVEEDOR`: usado por `CupoService` vía `SqlQueryRaw`.
+
 ## Pendiente (con BD)
-- Mapear los procedimientos almacenados restantes (Gestor/Producción: `LISTAENVIOSFECHAPROVEEDOR`, etc.).
+- Resto de SPs (`ENVIOPESADA`, `LISTAENVIOSIDPROVEEDOR` detalle, `CANCELAENVIO`, `CANCELAENVIOEMAIL`).
 - Confirmar el catálogo completo de `ESTADOMERCANCIA` y la semántica de `TIENENETO`.

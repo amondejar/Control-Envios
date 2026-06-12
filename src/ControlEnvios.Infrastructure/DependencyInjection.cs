@@ -30,7 +30,9 @@ public static class DependencyInjection
         // puede estar vacía mientras no haya acceso a la BD `Bascula`: solo fallará al ejecutar una
         // consulta real, no al arrancar. Se configura por User Secrets / variables de entorno.
         var connectionString = configuration.GetConnectionString("BasculaConnection");
-        services.AddDbContext<BasculaDbContext>(options => options.UseSqlServer(connectionString));
+        services.AddDbContext<BasculaDbContext>(options => options
+            .UseSqlServer(connectionString)
+            .AddInterceptors(new ArithAbortConnectionInterceptor()));
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IProveedorRepository, ProveedorRepository>();
@@ -39,6 +41,7 @@ public static class DependencyInjection
         services.AddScoped<IEnvioRepository, EnvioRepository>();
         services.AddScoped<ICupoRepository, CupoRepository>();
         services.AddScoped<IModuloRepository, ModuloRepository>();
+        services.AddScoped<Application.Consultas.IConsultaEnviosService, Consultas.ConsultaEnviosService>();
 
         return services;
     }

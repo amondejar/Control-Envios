@@ -1,5 +1,6 @@
 using ControlEnvios.Application.Autenticacion;
 using ControlEnvios.Domain.Enums;
+using ControlEnvios.Infrastructure.Consultas;
 using ControlEnvios.Infrastructure.Persistence;
 using ControlEnvios.Infrastructure.Persistence.Repositories;
 using ControlEnvios.Infrastructure.Security;
@@ -17,7 +18,10 @@ public class RealDbSmokeTests
     private static string? Conn => Environment.GetEnvironmentVariable("BASCULA_TEST_CONN");
 
     private static BasculaDbContext Crear() =>
-        new(new DbContextOptionsBuilder<BasculaDbContext>().UseSqlServer(Conn).Options);
+        new(new DbContextOptionsBuilder<BasculaDbContext>()
+            .UseSqlServer(Conn)
+            .AddInterceptors(new ArithAbortConnectionInterceptor())
+            .Options);
 
     [Fact]
     public async Task Conecta_y_consulta_todas_las_tablas()
@@ -69,5 +73,28 @@ public class RealDbSmokeTests
         Assert.True(resultado.Exito);
         Assert.Equal(RolUsuario.Proveedor, resultado.Rol);
         Assert.Equal(prov.Codigo, resultado.Identificador);
+    }
+
+    [Fact]
+    public async Task Consulta_por_fechas_ejecuta_el_SP_y_mapea_resultados()
+    {
+        if (string.IsNullOrWhiteSpace(Conn))
+        {
+            return; // sin BD configurada → omitido
+        }
+
+        await using var ctx = Crear();
+        var servicio = new ConsultaEnviosService(ctx);
+
+        // Rango realista (últimos 90 días): valida que el SP LISTAENVIOSFECHAPROVEEDOR se ejecuta y mapea.
+        var hoy = DateOnly.FromDateTime(DateTime.Today);
+        var filas = await servicio.PorFechasAsync(
+            hoy.AddDays(-90), hoy, codigoProveedor: null, codigoArticulo: null);
+
+        Assert.NotNull(filas);
+        if (filas.Count > 0)
+        {
+            Assert.True(filas[0].Id > 0);
+        }
     }
 }

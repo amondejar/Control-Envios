@@ -26,8 +26,8 @@ public class BasculaDbContextModelTests
 
         var entityTypes = context.Model.GetEntityTypes().ToList();
 
-        // 9 entidades de dominio mapeadas.
-        Assert.Equal(9, entityTypes.Count);
+        // 9 entidades de dominio con clave (más el tipo sin clave del SP de consulta).
+        Assert.Equal(9, entityTypes.Count(e => e.FindPrimaryKey() is not null));
     }
 
     [Theory]

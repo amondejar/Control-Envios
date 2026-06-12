@@ -94,16 +94,3 @@ h1:focus {
     box-shadow: 0 12px 26px rgba(0, 0, 0, 0.14) !important;
 }
 
-/* Pie con degradado tenue y logos en escala de grises que se colorean al pasar */
-.app-footer {
-    background: linear-gradient(90deg, rgba(46, 125, 50, 0.07), rgba(245, 124, 0, 0.07));
-}
-.app-footer img {
-    filter: grayscale(35%);
-    opacity: 0.9;
-    transition: filter .2s ease, opacity .2s ease;
-}
-.app-footer img:hover {
-    filter: none;
-    opacity: 1;
-}

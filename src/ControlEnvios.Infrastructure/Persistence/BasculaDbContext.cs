@@ -27,6 +27,10 @@ public class BasculaDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(BasculaDbContext).Assembly);
+
+        // Tipo de resultado del SP LISTAENVIOSFECHAPROVEEDOR (sin clave, no es una tabla).
+        modelBuilder.Entity<Consultas.EnvioConsultaResultado>().HasNoKey().ToView(null);
+
         base.OnModelCreating(modelBuilder);
     }
 }

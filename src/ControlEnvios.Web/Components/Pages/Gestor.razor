@@ -1,9 +1,11 @@
 @page "/gestor"
 @attribute [Authorize(Roles = "Gestor")]
 @using ControlEnvios.Application.Abstractions.Persistence
+@using ControlEnvios.Application.Consultas
 @using ControlEnvios.Domain.Entities
 @inject IProveedorRepository ProveedorRepo
 @inject IArticuloRepository ArticuloRepo
+@inject IConsultaEnviosService Consultas
 @inject ISnackbar Snackbar
 
 <PageTitle>Gestión de envíos</PageTitle>
@@ -37,17 +39,21 @@
     </MudGrid>
     <div class="d-flex justify-end mt-3">
         <MudButton StartIcon="@Icons.Material.Filled.Search" Variant="Variant.Filled" Color="Color.Primary"
-                   OnClick="Buscar">Buscar</MudButton>
+                   OnClick="Buscar" Disabled="_buscando">Buscar</MudButton>
     </div>
 </MudPaper>
 
-<MudDataGrid T="Envio" Items="_resultados" Dense="true" Hover="true" Elevation="2" Filterable="true">
+<MudDataGrid T="ConsultaEnvio" Items="_resultados" Loading="_buscando" Dense="true" Hover="true" Elevation="2"
+             Filterable="true" SortMode="SortMode.Multiple">
     <Columns>
         <PropertyColumn Property="x => x.FechaEnvio" Title="Fecha" />
-        <PropertyColumn Property="x => x.CodigoProveedor" Title="Proveedor" />
-        <PropertyColumn Property="x => x.CodigoArticulo" Title="Artículo" />
+        <PropertyColumn Property="x => x.HoraEnvio" Title="Hora" />
+        <PropertyColumn Property="x => x.NombreProveedor" Title="Proveedor" />
+        <PropertyColumn Property="x => x.NombreArticulo" Title="Artículo" />
         <PropertyColumn Property="x => x.Matricula" Title="Matrícula" />
         <PropertyColumn Property="x => x.KilosEnviados" Title="Kilos" Format="N0" />
+        <PropertyColumn Property="x => x.PesoBascula" Title="Neto báscula" Format="N0" />
+        <PropertyColumn Property="x => x.Observaciones" Title="Observaciones" />
     </Columns>
     <NoRecordsContent>
         <MudText Class="pa-4 mud-text-secondary">Sin resultados para los filtros seleccionados.</MudText>
@@ -59,10 +65,11 @@
     private DateTime? _fechaFin = DateTime.Today;
     private string? _proveedor;
     private string? _articulo;
+    private bool _buscando;
 
     private IReadOnlyList<Proveedor> _proveedores = [];
     private IReadOnlyList<Articulo> _articulos = [];
-    private IReadOnlyList<Envio> _resultados = [];
+    private IReadOnlyList<ConsultaEnvio> _resultados = [];
 
     protected override async Task OnInitializedAsync()
     {
@@ -77,9 +84,36 @@
         }
     }
 
-    private void Buscar()
+    private async Task Buscar()
     {
-        // TODO Fase 3 (con BD): consulta por fechas vía SP LISTAENVIOSFECHAPROVEEDOR (servicio de consulta).
-        Snackbar.Add("La consulta por fechas se habilitará al conectar la base de datos.", Severity.Info);
+        if (_fechaInicio is null || _fechaFin is null)
+        {
+            Snackbar.Add("Indique el rango de fechas.", Severity.Warning);
+            return;
+        }
+
+        _buscando = true;
+        try
+        {
+            _resultados = await Consultas.PorFechasAsync(
+                DateOnly.FromDateTime(_fechaInicio.Value),
+                DateOnly.FromDateTime(_fechaFin.Value),
+                _proveedor,
+                _articulo);
+
+            if (_resultados.Count == 0)
+            {
+                Snackbar.Add("Sin resultados para los filtros seleccionados.", Severity.Info);
+            }
+        }
+        catch (Exception)
+        {
+            _resultados = [];
+            Snackbar.Add("No se pudo realizar la consulta.", Severity.Error);
+        }
+        finally
+        {
+            _buscando = false;
+        }
     }
 }
