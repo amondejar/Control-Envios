@@ -1,71 +1,81 @@
 @page "/login"
 @layout LoginLayout
 @using System.ComponentModel.DataAnnotations
+@using System.Security.Claims
 @using ControlEnvios.Application.Autenticacion
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
 @inject IAuthService AuthService
-@inject CircuitAuthenticationStateProvider AuthState
 @inject NavigationManager Nav
-@inject ISnackbar Snackbar
 
 <PageTitle>Acceso — Control de Envíos</PageTitle>
 
 <MudPaper Elevation="6" Class="pa-8" Style="width:100%;max-width:420px;border-radius:16px;">
     <div class="d-flex justify-center mb-2">
-        <MudImage Src="images/logo.jpg" Alt="Derivados Cítricos" Height="64" Elevation="0" />
+        <MudImage Src="images/logo.jpg" Alt="Derivados Cítricos" Height="64" />
     </div>
     <MudText Typo="Typo.h5" Align="Align.Center" Class="mb-1">Control de Envíos</MudText>
     <MudText Typo="Typo.body2" Align="Align.Center" Class="mud-text-secondary mb-6">Acceso de proveedores y gestión</MudText>
 
-    <EditForm Model="_model" OnValidSubmit="Entrar">
+    <EditForm Model="Input" FormName="login" OnValidSubmit="Entrar">
         <DataAnnotationsValidator />
-        <MudTextField @bind-Value="_model.Usuario" For="@(() => _model.Usuario)"
-                      Label="Usuario / Cód. proveedor" Variant="Variant.Outlined"
-                      Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Person" Class="mb-4" />
-        <MudTextField @bind-Value="_model.Password" For="@(() => _model.Password)"
-                      Label="Contraseña" InputType="InputType.Password" Variant="Variant.Outlined"
-                      Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Lock" Class="mb-6" />
-        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary"
-                   FullWidth="true" Size="Size.Large" Disabled="_cargando">
-            @if (_cargando)
-            {
-                <MudProgressCircular Class="ms-n1 me-2" Size="Size.Small" Indeterminate="true" />
-                <span>Accediendo…</span>
-            }
-            else
-            {
-                <span>Entrar</span>
-            }
-        </MudButton>
+
+        @if (_error is not null)
+        {
+            <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Dense="true" Class="mb-4">@_error</MudAlert>
+        }
+
+        <label class="login-label" for="usuario">Usuario / Cód. proveedor</label>
+        <InputText id="usuario" @bind-Value="Input.Usuario" class="login-input" autocomplete="username" />
+        <ValidationMessage For="() => Input.Usuario" />
+
+        <label class="login-label" for="password">Contraseña</label>
+        <InputText id="password" type="password" @bind-Value="Input.Password" class="login-input" autocomplete="current-password" />
+        <ValidationMessage For="() => Input.Password" />
+
+        <button type="submit" class="login-button">Entrar</button>
     </EditForm>
 </MudPaper>
 
 @code {
-    private readonly LoginModel _model = new();
-    private bool _cargando;
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+
+    [SupplyParameterFromForm] private LoginModel Input { get; set; } = new();
+
+    [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
+
+    private string? _error;
 
     private async Task Entrar()
     {
-        _cargando = true;
+        ResultadoLogin resultado;
         try
         {
-            var resultado = await AuthService.AutenticarAsync(_model.Usuario, _model.Password);
-            if (resultado.Exito)
-            {
-                AuthState.IniciarSesion(resultado);
-                Nav.NavigateTo("/");
-                return;
-            }
-            Snackbar.Add(resultado.Motivo ?? ResultadoLogin.MensajeCredencialesInvalidas, Severity.Error);
+            resultado = await AuthService.AutenticarAsync(Input.Usuario, Input.Password);
         }
         catch (Exception)
         {
-            // Sin BD configurada, la consulta falla. Mensaje neutro (sin filtrar detalles internos).
-            Snackbar.Add("No se pudo validar el acceso. Inténtelo de nuevo más tarde.", Severity.Error);
+            // Sin BD configurada u otro fallo: mensaje neutro (no se filtran detalles internos).
+            _error = "No se pudo validar el acceso. Inténtelo de nuevo más tarde.";
+            return;
         }
-        finally
+
+        if (!resultado.Exito)
         {
-            _cargando = false;
+            _error = resultado.Motivo ?? ResultadoLogin.MensajeCredencialesInvalidas;
+            return;
         }
+
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.Name, resultado.Identificador!),
+            new(ClaimTypes.GivenName, resultado.Nombre ?? resultado.Identificador!),
+            new(ClaimTypes.Role, resultado.Rol!.Value.ToString()),
+        };
+        var identidad = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identidad));
+
+        Nav.NavigateTo(string.IsNullOrWhiteSpace(ReturnUrl) ? "/" : ReturnUrl);
     }
 
     public sealed class LoginModel

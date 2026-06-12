@@ -12,4 +12,10 @@ public interface IPasswordHasher
 
     /// <summary>Genera el valor a almacenar para una contraseña.</summary>
     string Hashear(string raw);
+
+    /// <summary>
+    /// Indica si el valor almacenado debería re-hashearse (p. ej. era texto plano heredado o usa
+    /// parámetros antiguos). Permite el re-hash progresivo al primer login válido.
+    /// </summary>
+    bool NecesitaRehash(string? almacenada);
 }

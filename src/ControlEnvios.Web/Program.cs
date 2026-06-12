@@ -36,12 +36,17 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.LoginPath = "/login";
         options.AccessDeniedPath = "/login";
+        options.Cookie.Name = "ControlEnvios.Auth";
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SameSite = SameSiteMode.Lax;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest; // 'Always' tras HTTPS en producción
+        options.ExpireTimeSpan = TimeSpan.FromHours(8);
+        options.SlidingExpiration = true;
     });
 builder.Services.AddAuthorization();
 builder.Services.AddCascadingAuthenticationState();
-builder.Services.AddScoped<CircuitAuthenticationStateProvider>();
-builder.Services.AddScoped<AuthenticationStateProvider>(
-    sp => sp.GetRequiredService<CircuitAuthenticationStateProvider>());
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<AuthenticationStateProvider, CookieAuthenticationStateProvider>();
 
 var app = builder.Build();
 

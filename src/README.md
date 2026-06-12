@@ -46,4 +46,8 @@ dotnet user-secrets set "Smtp:Password" "***" --project src/ControlEnvios.Web
 - ✅ Fase 0 — limpieza del repositorio.
 - ✅ Fase 1 — caracterización funcional.
 - ✅ Fase 2 — andamiaje (esta solución): capas, DI, Serilog, MudBlazor + tema de empresa, CI.
-- ⏭️ Fase 3 — capa de datos (scaffold EF Core desde la BD `Bascula`).
+- ✅ Fase 3 — entidades de dominio + persistencia EF Core "en seco" (DbContext, Fluent API, repos). *Scaffold real y SPs pendientes de acceso a la BD.*
+- ✅ Fase 4 — servicios de negocio (cupos, auth, envíos, email) con 32+ tests.
+- ✅ Fase 5 — UI Blazor + MudBlazor por módulo (login, envíos, gestor, producción) con la marca de empresa.
+- ✅ Fase 6 — seguridad: hashing PBKDF2 con transición, autenticación por cookie, secretos fuera del repo.
+- ⏭️ Fase 7 — paridad, despliegue y corte *(requiere acceso a la BD)*.

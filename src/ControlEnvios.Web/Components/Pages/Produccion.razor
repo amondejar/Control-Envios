@@ -1,5 +1,6 @@
 @page "/produccion"
 @attribute [Authorize(Roles = "Produccion")]
+@rendermode InteractiveServer
 @using ControlEnvios.Application.Abstractions.Persistence
 @using ControlEnvios.Domain.Entities
 @inject IProveedorRepository ProveedorRepo

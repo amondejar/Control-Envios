@@ -152,11 +152,14 @@ ControlEnvios.sln  (nuevo, .NET 8)
 
 > **Diferido a Fase 6** (frontera limpia): el inicio de sesión por **cookie** (hoy el estado de auth vive en el circuito Blazor vía `CircuitAuthenticationStateProvider`; las páginas `[Authorize]` se protegen por challenge de cookie, así que serán plenamente navegables tras login cuando se implemente `SignInAsync` en Fase 6) y el **hashing** real de contraseñas.
 
-### Fase 6 — Seguridad *(crítica, transversal)*
-- [ ] **Sacar la cadena de conexión** de la configuración versionada → User Secrets / variables de entorno.
-- [ ] **Hashing de contraseñas** (`PasswordHasher`/PBKDF2). Estrategia de transición: re-hash al primer login válido contra el valor heredado, o reseteo coordinado con el cliente.
-- [ ] Autenticación basada en cookies de ASP.NET Core + autorización por rol (proveedor / gestor / producción) reemplazando el estado manual en `Session`.
-- [ ] Revisión de exposición de mensajes de error; logging estructurado en lugar de volcar `Exception.Message`.
+### Fase 6 — Seguridad *(crítica, transversal)* ✅ COMPLETADA
+Detalle en [`docs/FASE6-SEGURIDAD.md`](docs/FASE6-SEGURIDAD.md).
+- [x] Secretos fuera del control de versiones (cadena de conexión y clave SMTP por User Secrets / entorno; `appsettings` con valores en blanco).
+- [x] **Hashing PBKDF2** (`Pbkdf2PasswordHasher`, HMAC-SHA256, 210k iteraciones) con **transición** desde texto plano y **re-hash progresivo** al primer login válido en `AuthService`. Con tests.
+- [x] **Autenticación por cookie** de ASP.NET Core: login SSR que firma con `SignInAsync` tras validar (no antes), logout con `SignOutAsync`, autorización por rol con `[Authorize(Roles=…)]`. Cookie `HttpOnly`/`SameSite`/expiración. Reemplaza el estado manual en `Session`. Flujo verificado por smoke-test.
+- [x] Mensajes de error neutros en la UI + logging estructurado (Serilog); el login no distingue usuario inexistente de clave incorrecta.
+- [ ] *Pendiente del cliente:* **rotar** las credenciales comprometidas (BD `Bascula` y SMTP) que están en el histórico de `main`.
+- [ ] *Endurecimiento recomendado* (ver doc): logout por POST, `SecurePolicy=Always`+HSTS en producción, lockout por intentos, autorización a nivel de dato.
 
 ### Fase 7 — Pruebas, paridad y corte
 - [ ] Validar paridad funcional contra los casos de la Fase 1 (con el cliente/usuario clave).

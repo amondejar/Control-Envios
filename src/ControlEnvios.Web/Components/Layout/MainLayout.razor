@@ -1,6 +1,5 @@
 @inherits LayoutComponentBase
 @using ControlEnvios.Web.Theming
-@inject CircuitAuthenticationStateProvider AuthState
 @inject NavigationManager Nav
 
 <MudThemeProvider Theme="CompanyTheme.Default" @bind-IsDarkMode="_isDarkMode" />
@@ -55,9 +54,5 @@
     private bool _drawerOpen = true;
     private bool _isDarkMode;
 
-    private void CerrarSesion()
-    {
-        AuthState.CerrarSesion();
-        Nav.NavigateTo("/login");
-    }
+    private void CerrarSesion() => Nav.NavigateTo("/account/logout", forceLoad: true);
 }

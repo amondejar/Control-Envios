@@ -7,8 +7,8 @@ namespace ControlEnvios.UnitTests.Autenticacion;
 
 public class AuthServiceTests
 {
-    private static AuthService Sut(FakeProveedorRepository prov, FakeUsuarioRepository usu) =>
-        new(prov, usu, new FakePasswordHasher());
+    private static AuthService Sut(FakeProveedorRepository prov, FakeUsuarioRepository usu, FakePasswordHasher? hasher = null) =>
+        new(prov, usu, hasher ?? new FakePasswordHasher(), new FakeUnitOfWork());
 
     // LOGIN-01
     [Fact]
@@ -93,5 +93,40 @@ public class AuthServiceTests
         var r = await sut.AutenticarAsync(usuario, password);
 
         Assert.False(r.Exito);
+    }
+
+    [Fact]
+    public async Task Login_con_password_heredada_rehashea_y_persiste()
+    {
+        var proveedor = new Proveedor { Codigo = "P001", Password = "secret" };
+        var uow = new FakeUnitOfWork();
+        var sut = new AuthService(
+            new FakeProveedorRepository { Proveedor = proveedor },
+            new FakeUsuarioRepository(),
+            new FakePasswordHasher { Rehash = true },
+            uow);
+
+        var r = await sut.AutenticarAsync("P001", "secret");
+
+        Assert.True(r.Exito);
+        Assert.Equal("HASHED:secret", proveedor.Password); // re-hasheada
+        Assert.Equal(1, uow.Guardados);                    // persistida
+    }
+
+    [Fact]
+    public async Task Login_con_hash_actual_no_rehashea()
+    {
+        var proveedor = new Proveedor { Codigo = "P001", Password = "secret" };
+        var uow = new FakeUnitOfWork();
+        var sut = new AuthService(
+            new FakeProveedorRepository { Proveedor = proveedor },
+            new FakeUsuarioRepository(),
+            new FakePasswordHasher { Rehash = false },
+            uow);
+
+        await sut.AutenticarAsync("P001", "secret");
+
+        Assert.Equal("secret", proveedor.Password);
+        Assert.Equal(0, uow.Guardados);
     }
 }

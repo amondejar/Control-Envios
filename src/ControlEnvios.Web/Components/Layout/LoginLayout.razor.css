@@ -6,3 +6,50 @@
     padding: 1.5rem;
     background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 60%, #F9A825 160%);
 }
+
+::deep .login-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin: 0.75rem 0 0.25rem;
+    color: var(--mud-palette-text-secondary);
+}
+
+::deep .login-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--mud-palette-lines-inputs);
+    border-radius: 8px;
+    font-size: 1rem;
+    background: var(--mud-palette-surface);
+    color: var(--mud-palette-text-primary);
+}
+
+::deep .login-input:focus {
+    outline: none;
+    border-color: var(--mud-palette-primary);
+    box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+}
+
+::deep .login-button {
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 0.7rem;
+    border: none;
+    border-radius: 8px;
+    background: var(--mud-palette-primary);
+    color: var(--mud-palette-primary-text);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+::deep .login-button:hover {
+    background: var(--mud-palette-primary-darken);
+}
+
+::deep .validation-message {
+    color: var(--mud-palette-error);
+    font-size: 0.8rem;
+}

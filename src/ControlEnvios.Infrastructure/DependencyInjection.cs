@@ -19,7 +19,7 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         // Servicios sin dependencia de BD.
-        services.AddScoped<IPasswordHasher, LegacyPlaintextPasswordHasher>();
+        services.AddScoped<IPasswordHasher, Pbkdf2PasswordHasher>();
         services.Configure<SmtpOptions>(configuration.GetSection(SmtpOptions.SectionName));
         services.AddScoped<IEmailService, SmtpEmailService>();
 
