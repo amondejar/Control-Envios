@@ -50,6 +50,9 @@
     <NoRecordsContent>
         <MudText Class="pa-4 mud-text-secondary">No hay envíos desde hoy.</MudText>
     </NoRecordsContent>
+    <PagerContent>
+        <MudDataGridPager T="Envio" PageSizeOptions="@(new[] { 10, 25, 50, 100 })" />
+    </PagerContent>
 </MudDataGrid>
 
 @code {

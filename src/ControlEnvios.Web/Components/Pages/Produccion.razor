@@ -74,6 +74,9 @@
     <NoRecordsContent>
         <MudText Class="pa-4 mud-text-secondary">Sin resultados para los filtros seleccionados.</MudText>
     </NoRecordsContent>
+    <PagerContent>
+        <MudDataGridPager T="ConsultaEnvio" PageSizeOptions="@(new[] { 10, 25, 50, 100 })" />
+    </PagerContent>
 </MudDataGrid>
 
 @code {
