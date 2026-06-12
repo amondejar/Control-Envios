@@ -49,7 +49,7 @@ public class EnvioServiceTests
 
         Assert.True(r.Exito);
         var envio = Assert.Single(envios.Envios);
-        Assert.Equal(EstadoEnvio.Enviado, envio.Estado);
+        Assert.Equal(EstadoEnvio.Comunicado, envio.Estado);
         Assert.Equal("P001", envio.CodigoProveedor);
         Assert.Equal(1, uow.Guardados);
     }

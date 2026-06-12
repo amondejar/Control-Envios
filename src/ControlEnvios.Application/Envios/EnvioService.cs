@@ -32,7 +32,7 @@ public sealed class EnvioService(
             FechaEnvio = request.FechaEnvio,
             HoraEnvio = request.HoraEnvio,
             KilosEnviados = request.KilosEnviados,
-            Estado = EstadoEnvio.Enviado,
+            Estado = EstadoEnvio.Comunicado,
             Matricula = request.Matricula,
             Observaciones = request.Observaciones ?? string.Empty,
             EnviarEmail = false,

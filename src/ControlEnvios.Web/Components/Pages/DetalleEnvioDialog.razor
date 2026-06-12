@@ -1,0 +1,41 @@
+@using ControlEnvios.Application.Consultas
+
+<MudDialog>
+    <DialogContent>
+        <MudGrid Spacing="2">
+            <MudItem xs="6">@Campo("Proveedor", $"{Envio.CodigoProveedor} · {Envio.NombreProveedor}")</MudItem>
+            <MudItem xs="6">@Campo("Matrícula", Envio.Matricula)</MudItem>
+
+            <MudItem xs="6">@Campo("Artículo", Envio.NombreArticulo)</MudItem>
+            <MudItem xs="6">
+                <MudText Typo="Typo.caption" Class="mud-text-secondary">Estado</MudText>
+                <div><MudChip T="string" Size="Size.Small" Color="@EstadoEnvioUi.Color(Envio.Estado)">@EstadoEnvioUi.Texto(Envio.Estado)</MudChip></div>
+            </MudItem>
+
+            <MudItem xs="4">@Campo("Fecha envío", Envio.FechaEnvio)</MudItem>
+            <MudItem xs="4">@Campo("Hora envío", Envio.HoraEnvio)</MudItem>
+            <MudItem xs="4">@Campo("Hora salida", Envio.HoraSalida)</MudItem>
+
+            <MudItem xs="6">@Campo("Kilos comunicados (bruto)", Envio.KilosEnviados.ToString("N0"))</MudItem>
+            <MudItem xs="6">@Campo("Neto báscula", (Envio.PesoBascula ?? 0).ToString("N0"))</MudItem>
+
+            <MudItem xs="6">@Campo("Báscula grande", Envio.BasculaGrande == true ? "Sí" : "No")</MudItem>
+            <MudItem xs="6">@Campo("Báscula pequeña", Envio.BasculaPequena == true ? "Sí" : "No")</MudItem>
+
+            <MudItem xs="12">@Campo("Observaciones", string.IsNullOrWhiteSpace(Envio.Observaciones) ? "—" : Envio.Observaciones)</MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="@(() => MudDialog.Close())">Cerrar</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter] public ConsultaEnvio Envio { get; set; } = default!;
+
+    private RenderFragment Campo(string etiqueta, string? valor) =>@<div>
+        <MudText Typo="Typo.caption" Class="mud-text-secondary">@etiqueta</MudText>
+        <MudText Typo="Typo.body1">@(string.IsNullOrWhiteSpace(valor) ? "—" : valor)</MudText>
+    </div>;
+}

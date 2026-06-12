@@ -3,8 +3,10 @@
 @using ControlEnvios.Application.Abstractions.Persistence
 @using ControlEnvios.Application.Consultas
 @using ControlEnvios.Domain.Entities
+@using ControlEnvios.Domain.Enums
 @inject IProveedorRepository ProveedorRepo
 @inject IConsultaEnviosService Consultas
+@inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
 <PageTitle>Producción</PageTitle>
@@ -34,15 +36,40 @@
     </div>
 </MudPaper>
 
-<MudDataGrid T="ConsultaEnvio" Items="_resultados" Loading="_buscando" Dense="true" Hover="true" Elevation="2" Filterable="true">
+@if (_resultados.Count > 0)
+{
+    <MudGrid Class="mb-4">
+        <MudItem xs="6" md="4"><ResumenTarjeta Titulo="Registros" Valor="@_resultados.Count.ToString()" Icono="@Icons.Material.Filled.ListAlt" Color="Color.Default" /></MudItem>
+        <MudItem xs="6" md="4"><ResumenTarjeta Titulo="Kg comunicados (bruto)" Valor="@_kgBruto.ToString("N0")" Icono="@Icons.Material.Filled.LocalShipping" Color="Color.Info" /></MudItem>
+        <MudItem xs="6" md="4"><ResumenTarjeta Titulo="Kg pesados (neto)" Valor="@_kgNeto.ToString("N0")" Icono="@Icons.Material.Filled.Scale" Color="Color.Success" /></MudItem>
+    </MudGrid>
+}
+
+<MudDataGrid T="ConsultaEnvio" Items="_resultados" Loading="_buscando" Dense="true" Hover="true" Elevation="2"
+             Filterable="true" RowStyleFunc="_filaEstilo">
     <Columns>
         <PropertyColumn Property="x => x.FechaEnvio" Title="Fecha" />
         <PropertyColumn Property="x => x.HoraEnvio" Title="Hora" />
         <PropertyColumn Property="x => x.NombreProveedor" Title="Proveedor" />
         <PropertyColumn Property="x => x.NombreArticulo" Title="Artículo" />
         <PropertyColumn Property="x => x.Matricula" Title="Matrícula" />
-        <PropertyColumn Property="x => x.KilosEnviados" Title="Kilos" Format="N0" />
-        <PropertyColumn Property="x => x.PesoBascula" Title="Neto báscula" Format="N0" />
+        <PropertyColumn Property="x => x.KilosEnviados" Title="Kg bruto" Format="N0" />
+        <PropertyColumn Property="x => x.PesoBascula" Title="Kg neto" Format="N0" />
+        <TemplateColumn Title="Estado">
+            <CellTemplate>
+                <MudChip T="string" Size="Size.Small" Color="@EstadoEnvioUi.Color(context.Item.Estado)">
+                    @EstadoEnvioUi.Texto(context.Item.Estado)
+                </MudChip>
+            </CellTemplate>
+        </TemplateColumn>
+        <TemplateColumn Title="" Sortable="false" Filterable="false">
+            <CellTemplate>
+                <MudTooltip Text="Ver detalle del camión">
+                    <MudIconButton Icon="@Icons.Material.Filled.Visibility" Size="Size.Small" Color="Color.Primary"
+                                   OnClick="@(() => VerDetalle(context.Item))" />
+                </MudTooltip>
+            </CellTemplate>
+        </TemplateColumn>
     </Columns>
     <NoRecordsContent>
         <MudText Class="pa-4 mud-text-secondary">Sin resultados para los filtros seleccionados.</MudText>
@@ -57,6 +84,11 @@
 
     private IReadOnlyList<Proveedor> _proveedores = [];
     private IReadOnlyList<ConsultaEnvio> _resultados = [];
+
+    private decimal _kgBruto;
+    private decimal _kgNeto;
+
+    private readonly Func<ConsultaEnvio, int, string> _filaEstilo = (e, _) => EstadoEnvioUi.FilaEstilo(e.Estado);
 
     protected override async Task OnInitializedAsync()
     {
@@ -87,6 +119,9 @@
                 _proveedor,
                 codigoArticulo: null);
 
+            _kgBruto = _resultados.Where(r => r.Estado != (int)EstadoEnvio.Cancelado).Sum(r => r.KilosEnviados);
+            _kgNeto = _resultados.Where(r => r.Estado == (int)EstadoEnvio.Pesado).Sum(r => r.PesoBascula ?? 0);
+
             if (_resultados.Count == 0)
             {
                 Snackbar.Add("Sin resultados para los filtros seleccionados.", Severity.Info);
@@ -101,5 +136,12 @@
         {
             _buscando = false;
         }
+    }
+
+    private Task VerDetalle(ConsultaEnvio envio)
+    {
+        var parameters = new DialogParameters<DetalleEnvioDialog> { { x => x.Envio, envio } };
+        var options = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true };
+        return DialogService.ShowAsync<DetalleEnvioDialog>("Detalle del envío", parameters, options);
     }
 }

@@ -3,9 +3,11 @@
 @using ControlEnvios.Application.Abstractions.Persistence
 @using ControlEnvios.Application.Consultas
 @using ControlEnvios.Domain.Entities
+@using ControlEnvios.Domain.Enums
 @inject IProveedorRepository ProveedorRepo
 @inject IArticuloRepository ArticuloRepo
 @inject IConsultaEnviosService Consultas
+@inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
 <PageTitle>Gestión de envíos</PageTitle>
@@ -43,17 +45,41 @@
     </div>
 </MudPaper>
 
+@if (_resultados.Count > 0)
+{
+    <MudGrid Class="mb-4">
+        <MudItem xs="6" md="3"><ResumenTarjeta Titulo="Registros" Valor="@_resultados.Count.ToString()" Icono="@Icons.Material.Filled.ListAlt" Color="Color.Default" /></MudItem>
+        <MudItem xs="6" md="3"><ResumenTarjeta Titulo="Kg comunicados (bruto)" Valor="@_kgBruto.ToString("N0")" Icono="@Icons.Material.Filled.LocalShipping" Color="Color.Info" /></MudItem>
+        <MudItem xs="6" md="3"><ResumenTarjeta Titulo="Kg pesados (neto)" Valor="@_kgNeto.ToString("N0")" Icono="@Icons.Material.Filled.Scale" Color="Color.Success" /></MudItem>
+        <MudItem xs="6" md="3"><ResumenTarjeta Titulo="Cancelados" Valor="@_numCancelados.ToString()" Icono="@Icons.Material.Filled.Cancel" Color="Color.Error" /></MudItem>
+    </MudGrid>
+}
+
 <MudDataGrid T="ConsultaEnvio" Items="_resultados" Loading="_buscando" Dense="true" Hover="true" Elevation="2"
-             Filterable="true" SortMode="SortMode.Multiple">
+             Filterable="true" SortMode="SortMode.Multiple" RowStyleFunc="_filaEstilo">
     <Columns>
         <PropertyColumn Property="x => x.FechaEnvio" Title="Fecha" />
         <PropertyColumn Property="x => x.HoraEnvio" Title="Hora" />
         <PropertyColumn Property="x => x.NombreProveedor" Title="Proveedor" />
         <PropertyColumn Property="x => x.NombreArticulo" Title="Artículo" />
         <PropertyColumn Property="x => x.Matricula" Title="Matrícula" />
-        <PropertyColumn Property="x => x.KilosEnviados" Title="Kilos" Format="N0" />
-        <PropertyColumn Property="x => x.PesoBascula" Title="Neto báscula" Format="N0" />
-        <PropertyColumn Property="x => x.Observaciones" Title="Observaciones" />
+        <PropertyColumn Property="x => x.KilosEnviados" Title="Kg bruto" Format="N0" />
+        <PropertyColumn Property="x => x.PesoBascula" Title="Kg neto" Format="N0" />
+        <TemplateColumn Title="Estado">
+            <CellTemplate>
+                <MudChip T="string" Size="Size.Small" Color="@EstadoEnvioUi.Color(context.Item.Estado)">
+                    @EstadoEnvioUi.Texto(context.Item.Estado)
+                </MudChip>
+            </CellTemplate>
+        </TemplateColumn>
+        <TemplateColumn Title="" Sortable="false" Filterable="false">
+            <CellTemplate>
+                <MudTooltip Text="Ver detalle del camión">
+                    <MudIconButton Icon="@Icons.Material.Filled.Visibility" Size="Size.Small" Color="Color.Primary"
+                                   OnClick="@(() => VerDetalle(context.Item))" />
+                </MudTooltip>
+            </CellTemplate>
+        </TemplateColumn>
     </Columns>
     <NoRecordsContent>
         <MudText Class="pa-4 mud-text-secondary">Sin resultados para los filtros seleccionados.</MudText>
@@ -70,6 +96,12 @@
     private IReadOnlyList<Proveedor> _proveedores = [];
     private IReadOnlyList<Articulo> _articulos = [];
     private IReadOnlyList<ConsultaEnvio> _resultados = [];
+
+    private decimal _kgBruto;
+    private decimal _kgNeto;
+    private int _numCancelados;
+
+    private readonly Func<ConsultaEnvio, int, string> _filaEstilo = (e, _) => EstadoEnvioUi.FilaEstilo(e.Estado);
 
     protected override async Task OnInitializedAsync()
     {
@@ -101,6 +133,8 @@
                 _proveedor,
                 _articulo);
 
+            CalcularTotales();
+
             if (_resultados.Count == 0)
             {
                 Snackbar.Add("Sin resultados para los filtros seleccionados.", Severity.Info);
@@ -109,11 +143,26 @@
         catch (Exception)
         {
             _resultados = [];
+            CalcularTotales();
             Snackbar.Add("No se pudo realizar la consulta.", Severity.Error);
         }
         finally
         {
             _buscando = false;
         }
+    }
+
+    private void CalcularTotales()
+    {
+        _kgBruto = _resultados.Where(r => r.Estado != (int)EstadoEnvio.Cancelado).Sum(r => r.KilosEnviados);
+        _kgNeto = _resultados.Where(r => r.Estado == (int)EstadoEnvio.Pesado).Sum(r => r.PesoBascula ?? 0);
+        _numCancelados = _resultados.Count(r => r.Estado == (int)EstadoEnvio.Cancelado);
+    }
+
+    private Task VerDetalle(ConsultaEnvio envio)
+    {
+        var parameters = new DialogParameters<DetalleEnvioDialog> { { x => x.Envio, envio } };
+        var options = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true };
+        return DialogService.ShowAsync<DetalleEnvioDialog>("Detalle del envío", parameters, options);
     }
 }
