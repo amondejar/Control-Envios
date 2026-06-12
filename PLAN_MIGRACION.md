@@ -120,11 +120,15 @@ ControlEnvios.sln  (nuevo, .NET 8)
 - [x] CI mínimo en `.github/workflows/ci.yml` (restore + build + test en push/PR de la rama).
 - [x] Verificado: `dotnet build` y `dotnet test` correctos; smoke-test de arranque OK.
 
-### Fase 3 — Capa de datos (EF Core)
-- [ ] Scaffold del `DbContext` y entidades desde la BD `Bascula` (Database-First).
-- [ ] Mapear procedimientos almacenados (`ENVIOPESADA`, `LISTAENVIOSIDPROVEEDOR`, `KILOS_SEMANA_PROVEEDOR`, etc.).
+### Fase 3 — Capa de datos (EF Core) 🔄 EN CURSO
+- [x] **Entidades de dominio definidas manualmente** (sin acceso a BD) a partir de los modelos EF6 del legacy:
+  `Proveedor`, `Envio`, `Articulo`, `CupoProveedor`, `CupoGlobal`, `Usuario`, `Modulo`, `EstadoMercancia`,
+  `PesadaBascula` + enums `EstadoEnvio`/`PerfilUsuario`. Nomenclatura limpia y tipos modernos (`DateOnly`/`TimeOnly`).
+- [x] Mapeo propiedad ↔ columna documentado en [`docs/FASE3-MAPEO-ENTIDADES.md`](docs/FASE3-MAPEO-ENTIDADES.md).
+- [ ] *(Requiere BD)* Generar/validar el `DbContext` real (scaffold Database-First) y configuraciones Fluent API.
+- [ ] *(Requiere BD)* Mapear procedimientos almacenados (`ENVIOPESADA`, `LISTAENVIOSIDPROVEEDOR`, `KILOS_SEMANA_PROVEEDOR`, etc.).
 - [ ] Repositorios/servicios de infraestructura con `DbContext` inyectado y ciclo de vida correcto.
-- [ ] Pruebas de integración contra una BD de pruebas (no producción).
+- [ ] *(Requiere BD)* Pruebas de integración contra una BD de pruebas (no producción).
 
 ### Fase 4 — Lógica de negocio (capa Application)
 - [ ] Extraer la lógica de los controladores a servicios testeables: `EnvioService`, `CupoService`, `ProveedorService`, `EmailService`.
