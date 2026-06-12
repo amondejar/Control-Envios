@@ -1,11 +1,75 @@
-﻿################################################################################
-# Este archivo .gitignore ha sido creado automáticamente por Microsoft(R) Visual Studio.
+################################################################################
+# .gitignore para soluciones .NET (legacy .NET Framework + destino .NET 8)
 ################################################################################
 
-/.vs
-/ControlEnvios/bin
-/packages
-/SmptEmailSendProveedor/obj
-/SmptEmailSendProveedor/bin
-/ControlEnvios/.vs
-/SmptEmailSendProveedor/.vs
+## Resultados de compilación
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+[Dd]ebugPublic/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+build/
+bld/
+[Oo]ut/
+[Ll]og/
+[Ll]ogs/
+
+## Visual Studio / Rider / VS Code (parcial)
+.vs/
+.vscode/
+.idea/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*_i.c
+*_p.c
+*.rsp
+
+## Paquetes NuGet restaurados (se recuperan con restore)
+packages/
+*.nupkg
+*.snupkg
+.nuget/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## Carpeta de publicación (artefacto de despliegue, no fuente)
+Publicaciones/
+[Pp]ublish/
+PublishScripts/
+*.[Pp]ublish.xml
+*.azurePubxml
+
+## Archivos de usuario / temporales
+*.cache
+*.tmp
+*.log
+*.bak
+*.swp
+~$*
+*~
+
+## Secretos y configuración local (no versionar credenciales)
+appsettings.*.local.json
+*.secrets.json
+
+## SQL Server / EF
+*.mdf
+*.ldf
+*.ndf
+
+## SO
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+._*
